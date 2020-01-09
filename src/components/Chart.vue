@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <section>
     <div v-if="data.length === 0">Data is empty!</div>
     <div v-else id="chartContainer" />
-  </div>
+  </section>
 </template>
 
 <script>
@@ -39,7 +39,7 @@ export default {
       }
     },
     spec() {
-      const { height, padding } = this.ui
+      const { width, height, padding } = this.ui
 
       return {
         $schema: "https://vega.github.io/schema/vega-lite/v4.json",
@@ -47,7 +47,7 @@ export default {
         layer: this.layers.map(layer => ({
           ...layer,
           ...{
-            width: 400,
+            width,
             height,
             padding,
             autosize: {
