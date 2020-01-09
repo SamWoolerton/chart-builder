@@ -12,9 +12,10 @@
             <div
               v-for="(layer, index) in layers"
               :key="index"
-              @click="activeLayer = index"
+              @click="activeLayerIndex = index"
             >
-              Layer {{ index }} {{ index === activeLayer ? "(active)" : "" }}
+              Layer {{ index }}
+              {{ index === activeLayerIndex ? "(active)" : "" }}
             </div>
           </div>
         </div>
@@ -22,52 +23,53 @@
           <h3>Customise layer</h3>
           <div>
             <div>
-              <label>
-                Mark
-                <select
-                  :value="layersBase[activeLayer].main.mark"
-                  @input="updateEncoding('mark', $event)"
+              Mark
+              <select
+                :value="activeLayer.mark"
+                @input="updateEncoding('mark', $event)"
+              >
+                <option
+                  v-for="option in ['bar', 'line', 'area']"
+                  :key="option"
+                  :value="option"
+                  >{{ option }}</option
                 >
-                  <option
-                    v-for="option in ['bar', 'line', 'area']"
-                    :key="option"
-                    :value="option"
-                    >{{ option }}</option
-                  >
-                </select>
-              </label>
+              </select>
             </div>
             <div>
-              <label>
-                X
-                <select
-                  :value="layersBase[activeLayer].main.encoding.x.field"
-                  @input="updateEncoding('x', $event)"
+              X axis
+              <select
+                :value="activeLayer.encoding.x.field"
+                @input="updateEncoding('x', $event)"
+              >
+                <option
+                  v-for="(type, name) in columns"
+                  :key="name"
+                  :value="name"
+                  >{{ name }}</option
                 >
-                  <option
-                    v-for="(type, name) in columns"
-                    :key="name"
-                    :value="name"
-                    >{{ name }}</option
-                  >
-                </select>
-              </label>
+              </select>
+              <div v-if="columns[activeLayer.encoding.x.field].scale">
+                {{ columns[activeLayer.encoding.x.field].scale.domain }}
+              </div>
             </div>
             <div>
-              <label>
-                Y
-                <select
-                  :value="layersBase[activeLayer].main.encoding.y.field"
-                  @input="updateEncoding('y', $event)"
+              Y axis
+              <select
+                :value="activeLayer.encoding.y.field"
+                @input="updateEncoding('y', $event)"
+              >
+                <option
+                  v-for="(type, name) in columns"
+                  :key="name"
+                  :value="name"
+                  >{{ name }}</option
                 >
-                  <option
-                    v-for="(type, name) in columns"
-                    :key="name"
-                    :value="name"
-                    >{{ name }}</option
-                  >
-                </select>
-              </label>
+              </select>
+              <div v-if="columns[activeLayer.encoding.y.field].scale">
+                Scale domain set to
+                {{ columns[activeLayer.encoding.y.field].scale.domain }}
+              </div>
             </div>
           </div>
         </div>
@@ -92,14 +94,14 @@ export default {
       url: "https://vega.github.io/editor/data/movies.json",
     },
     columns: {
-      IMDB_Rating: "quantitative",
-      US_Gross: "quantitative",
-      Worldwide_Gross: "quantitative",
-      Production_Budget: "quantitative",
-      MPAA_Rating: "nominal",
-      Title: "nominal",
+      IMDB_Rating: { type: "quantitative", scale: { domain: [0, 10] } },
+      US_Gross: { type: "quantitative" },
+      Worldwide_Gross: { type: "quantitative" },
+      Production_Budget: { type: "quantitative" },
+      MPAA_Rating: { type: "nominal" },
+      Title: { type: "nominal" },
     },
-    activeLayer: 0,
+    activeLayerIndex: 0,
     layersBase: [
       {
         main: {
@@ -113,13 +115,19 @@ export default {
               field: "IMDB_Rating",
               type: "quantitative",
             },
+            color: {
+              field: "IMDB_Rating",
+              type: "quantitative",
+            },
           },
         },
         config: {
           encoding: {
             y: {
               aggregate: "average",
-              scale: { domain: [0, 10] },
+            },
+            color: {
+              aggregate: "average",
             },
           },
         },
@@ -133,17 +141,19 @@ export default {
         .map(({ main, config }) => deepmerge(main, config))
         .filter(validLayer)
     },
+    activeLayer() {
+      return this.layers[this.activeLayerIndex]
+    },
   },
   methods: {
     updateEncoding(type, event) {
       const { value } = event.target
-      const workingObj = this.layersBase[this.activeLayer].main
       if (type === "mark") {
-        workingObj.mark = value
+        this.layersBase[this.activeLayerIndex].main.mark = value
       } else if (type === "x" || type === "y") {
-        this.$set(this.layersBase[this.activeLayer].main.encoding, type, {
+        this.$set(this.layersBase[this.activeLayerIndex].main.encoding, type, {
           field: value,
-          type: this.columns[value],
+          ...this.columns[value],
         })
       }
     },
