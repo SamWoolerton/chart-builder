@@ -2,7 +2,7 @@
   <div>
     <h2>Chart builder</h2>
     <div class="flex w-full">
-      <DataPane />
+      <DataPane :columns="columns" />
       <section>
         <div>
           <h3>Layers</h3>
