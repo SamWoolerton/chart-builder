@@ -23,51 +23,39 @@
           <h3>Customise layer</h3>
           <div>
             <div>
-              Mark
-              <select
+              <div class="font-semibold">Mark</div>
+              <Dropdown
+                :options="['bar', 'line', 'area']"
                 :value="activeLayer.mark"
                 @input="updateEncoding('mark', $event)"
-              >
-                <option
-                  v-for="option in ['bar', 'line', 'area']"
-                  :key="option"
-                  :value="option"
-                  >{{ option }}</option
-                >
-              </select>
+              />
             </div>
-            <div>
-              X axis
-              <select
+            <div class="mt-2">
+              <div class="font-semibold">X axis</div>
+              <Dropdown
+                :options="Object.keys(columns)"
                 :value="activeLayer.encoding.x.field"
                 @input="updateEncoding('x', $event)"
+              />
+              <div
+                v-if="columns[activeLayer.encoding.x.field].scale"
+                class="text-gray-700 text-sm"
               >
-                <option
-                  v-for="(type, name) in columns"
-                  :key="name"
-                  :value="name"
-                  >{{ name }}</option
-                >
-              </select>
-              <div v-if="columns[activeLayer.encoding.x.field].scale">
                 {{ columns[activeLayer.encoding.x.field].scale.domain }}
               </div>
             </div>
-            <div>
-              Y axis
-              <select
+            <div class="mt-2">
+              <div class="font-semibold">Y axis</div>
+              <Dropdown
+                :options="Object.keys(columns)"
                 :value="activeLayer.encoding.y.field"
                 @input="updateEncoding('y', $event)"
+              />
+              <div
+                v-if="columns[activeLayer.encoding.y.field].scale"
+                class="text-gray-700 text-sm"
               >
-                <option
-                  v-for="(type, name) in columns"
-                  :key="name"
-                  :value="name"
-                  >{{ name }}</option
-                >
-              </select>
-              <div v-if="columns[activeLayer.encoding.y.field].scale">
-                Scale domain set to
+                Domain scale set to
                 {{ columns[activeLayer.encoding.y.field].scale.domain }}
               </div>
             </div>
@@ -86,9 +74,10 @@ import deepmerge from "deepmerge"
 import DataPane from "../components/DataPane"
 import Chart from "../components/Chart"
 import ConfigPane from "../components/ConfigPane"
+import Dropdown from "../components/ui/Dropdown"
 
 export default {
-  components: { DataPane, Chart, ConfigPane },
+  components: { DataPane, Chart, ConfigPane, Dropdown },
   data: () => ({
     data: {
       url: "https://vega.github.io/editor/data/movies.json",
