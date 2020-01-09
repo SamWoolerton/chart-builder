@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Chart builder</h2>
-    <div>
+    <div class="flex w-full">
       <DataPane />
       <section>
         <div>
@@ -13,7 +13,9 @@
               v-for="(layer, index) in layers"
               :key="index"
               @click="activeLayer = index"
-            >Layer {{ index }} {{ index === activeLayer ? "(active)" : "" }}</div>
+            >
+              Layer {{ index }} {{ index === activeLayer ? "(active)" : "" }}
+            </div>
           </div>
         </div>
         <div>

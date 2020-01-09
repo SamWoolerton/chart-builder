@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section id="chartRoot" class="flex-grow overflow-hidden">
     <div v-if="data.length === 0">Data is empty!</div>
     <div v-else id="chartContainer" />
   </section>
@@ -66,7 +66,7 @@ export default {
   },
   async mounted() {
     // triggers Vega render via watcher
-    this.containerWidth = getEl("chartContainer").offsetWidth
+    this.containerWidth = getEl("chartRoot").offsetWidth
     this.configureResizeObserver()
   },
   methods: {
@@ -83,12 +83,15 @@ export default {
     },
     configureResizeObserver() {
       this.resizeObserver = new ResizeObserver(
-        debounce(100, ([el]) => {
-          this.containerWidth = el.contentRect.width
+        debounce(300, ([el]) => {
+          const newWidth = el.contentRect.width
+          if (Math.abs(newWidth - this.containerWidth) > 20) {
+            this.containerWidth = newWidth
+          }
         }),
       )
 
-      this.resizeObserver.observe(getEl("chartContainer"))
+      this.resizeObserver.observe(getEl("chartRoot"))
     },
   },
 }

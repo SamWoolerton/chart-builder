@@ -7,9 +7,8 @@ export const unique = arr => [...new Set(arr)]
 export const debounce = (wait, callback) => {
   let timeout = null
   return (...args) => {
-    const next = () => callback(...args)
     clearTimeout(timeout)
-    timeout = setTimeout(next, wait)
+    timeout = setTimeout(() => callback(...args), wait)
   }
 }
 export const loadCSV = async path => {
