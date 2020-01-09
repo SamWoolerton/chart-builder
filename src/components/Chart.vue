@@ -63,6 +63,18 @@ export default {
     containerWidth() {
       this.loadVega()
     },
+    layers: {
+      handler() {
+        this.loadVega()
+      },
+      deep: true,
+    },
+    data: {
+      handler() {
+        this.loadVega()
+      },
+      deep: true,
+    },
   },
   async mounted() {
     // triggers Vega render via watcher
