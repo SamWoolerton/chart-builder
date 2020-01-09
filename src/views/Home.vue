@@ -1,26 +1,31 @@
 <template>
   <div>
-    <h2>Chart builder</h2>
     <div class="flex w-full">
       <DataPane :columns="columns" />
       <section>
         <div>
           <h3>Layers</h3>
-          <button @click="layers.push({})">Add layer</button>
-          <div v-if="layers.length === 0">You don't have any layers</div>
+          <button
+            @click="layersBase.push({ main: {}, config: {} })"
+            class="my-2"
+          >
+            Add layer
+          </button>
+          <div v-if="layersBase.length === 0">You don't have any layers</div>
           <div v-else>
             <div
-              v-for="(layer, index) in layers"
+              v-for="(layer, index) in layersBase"
               :key="index"
               @click="activeLayerIndex = index"
+              class="cursor-pointer"
             >
               Layer {{ index }}
               {{ index === activeLayerIndex ? "(active)" : "" }}
             </div>
           </div>
         </div>
-        <div>
-          <h3>Customise layer</h3>
+        <div class="mt-4">
+          <h3>Customise layer {{ activeLayerIndex }}</h3>
           <div>
             <div>
               <div class="font-semibold">Mark</div>
