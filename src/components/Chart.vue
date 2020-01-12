@@ -1,7 +1,9 @@
 <template>
-  <section id="chartRoot" class="flex-grow overflow-hidden">
-    <div v-if="data.length === 0">Data is empty!</div>
-    <div v-else id="chartContainer" />
+  <section class="flex-grow overflow-hidden">
+    <div id="chartRoot">
+      <div v-if="data.length === 0">Data is empty!</div>
+      <div v-else id="chartContainer" />
+    </div>
   </section>
 </template>
 
@@ -44,18 +46,20 @@ export default {
       return {
         $schema: "https://vega.github.io/schema/vega-lite/v4.json",
         data: this.data,
-        layer: this.layers.map(layer => ({
-          ...layer,
-          ...{
-            width,
-            height,
-            padding,
-            autosize: {
-              type: "fit",
-              contains: "padding",
-            },
+        config: {
+          axis: {
+            labelFont: `"Open Sans", sans-serif`,
+            titleFont: `"Open Sans", sans-serif`,
           },
-        })),
+        },
+        width,
+        height,
+        padding,
+        autosize: {
+          type: "fit",
+          contains: "padding",
+        },
+        layer: this.layers,
       }
     },
   },
