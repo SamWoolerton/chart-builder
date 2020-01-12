@@ -23,3 +23,6 @@ export const loadCSV = async path => {
       return { category, month, value }
     })
 }
+export const removeChildren = el => {
+  while (el.firstChild && !el.firstChild.remove());
+}

@@ -27,6 +27,8 @@ export default {
   data: () => ({
     containerWidth: null,
     resizeObserver: null,
+    chartRoot: null,
+    chartContainer: null,
   }),
   computed: {
     ui() {
@@ -81,8 +83,11 @@ export default {
     },
   },
   async mounted() {
+    this.chartRoot = getEl("chartRoot")
+    this.chartContainer = getEl("chartContainer")
+
     // triggers Vega render via watcher
-    this.containerWidth = getEl("chartRoot").offsetWidth
+    this.containerWidth = this.chartRoot.offsetWidth
     this.configureResizeObserver()
   },
   methods: {
@@ -93,13 +98,13 @@ export default {
       const runtime = vega.parse(vgSpec)
       new vega.View(runtime)
         .logLevel(vega.Warn)
-        .initialize(getEl("chartContainer"))
+        .initialize(this.chartContainer)
         .renderer("svg")
         .run()
     },
     configureResizeObserver() {
       this.resizeObserver = new ResizeObserver(
-        debounce(300, ([el]) => {
+        debounce(300, async ([el]) => {
           const newWidth = el.contentRect.width
           if (Math.abs(newWidth - this.containerWidth) > 20) {
             this.containerWidth = newWidth
@@ -107,7 +112,7 @@ export default {
         }),
       )
 
-      this.resizeObserver.observe(getEl("chartRoot"))
+      this.resizeObserver.observe(this.chartRoot)
     },
   },
 }

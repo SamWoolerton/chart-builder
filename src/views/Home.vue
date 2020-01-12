@@ -1,16 +1,11 @@
 <template>
   <div>
-    <div class="flex w-full">
+    <div class="flex w-full pane-wrapper">
       <DataPane :columns="columns" />
       <section>
         <div>
           <h3>Layers</h3>
-          <button
-            @click="layersBase.push({ main: {}, config: {} })"
-            class="my-2"
-          >
-            Add layer
-          </button>
+          <button @click="layersBase.push({ main: {}, config: {} })" class="my-2">Add layer</button>
           <div v-if="layersBase.length === 0">You don't have any layers</div>
           <div v-else>
             <div
@@ -45,9 +40,7 @@
               <div
                 v-if="columns[activeLayer.encoding.x.field].scale"
                 class="text-gray-700 text-sm"
-              >
-                {{ columns[activeLayer.encoding.x.field].scale.domain }}
-              </div>
+              >{{ columns[activeLayer.encoding.x.field].scale.domain }}</div>
             </div>
             <div class="mt-2">
               <div class="font-semibold">Y axis</div>
@@ -56,10 +49,7 @@
                 :value="activeLayer.encoding.y.field"
                 @input="updateEncoding('y', $event)"
               />
-              <div
-                v-if="columns[activeLayer.encoding.y.field].scale"
-                class="text-gray-700 text-sm"
-              >
+              <div v-if="columns[activeLayer.encoding.y.field].scale" class="text-gray-700 text-sm">
                 Domain scale set to
                 {{ columns[activeLayer.encoding.y.field].scale.domain }}
               </div>
@@ -67,8 +57,8 @@
           </div>
         </div>
       </section>
-      <Chart :data="data" :layers="layers" />
       <ConfigPane />
+      <Chart :data="data" :layers="layers" />
     </div>
   </div>
 </template>
@@ -154,3 +144,19 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+section {
+  min-width: 200px;
+}
+
+@media (max-width: 1199px) {
+  section {
+    flex-grow: 1;
+  }
+
+  .pane-wrapper {
+    flex-wrap: wrap;
+  }
+}
+</style>
