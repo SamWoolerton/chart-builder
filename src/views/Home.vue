@@ -50,7 +50,11 @@
               <div
                 v-if="activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].scale"
                 class="text-gray-700 text-sm mt-1"
-              >Domain scale set to {{ columns[activeLayer.encoding.y.field].scale.domain }}</div>
+              >
+                <span
+                  v-if="activeLayer.encoding.y.aggregate === undefined || activeLayer.encoding.y.aggregate === 'average' || activeLayer.encoding.y.aggregate === 'median'"
+                >Domain scale set to {{ columns[activeLayer.encoding.y.field].scale.domain }}</span>
+              </div>
             </div>
             <div class="mt-2">
               <div class="font-semibold text-lg">X axis</div>
@@ -72,7 +76,11 @@
               <div
                 v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].scale"
                 class="text-gray-700 text-sm"
-              >Domain scale set to {{ columns[activeLayer.encoding.x.field].scale.domain }}</div>
+              >
+                <span
+                  v-if="activeLayer.encoding.x.aggregate === undefined || activeLayer.encoding.x.aggregate === 'average' || activeLayer.encoding.x.aggregate === 'median'"
+                >Domain scale set to {{ columns[activeLayer.encoding.x.field].scale.domain }}</span>
+              </div>
             </div>
             <div class="mt-2">
               <div class="font-semibold text-lg">Colour</div>
@@ -82,7 +90,7 @@
                 @input="updateEncoding('color', $event)"
               />
               <div
-                v-if="activeLayer.encoding.color && columns[activeLayer.encoding.color.field].type === 'quantitative'"
+                v-if="activeLayer.encoding.color && activeLayer.encoding.color.field && columns[activeLayer.encoding.color.field].type === 'quantitative'"
               >
                 <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
                 <Dropdown
@@ -92,9 +100,13 @@
                 />
               </div>
               <div
-                v-if="activeLayer.encoding.color && columns[activeLayer.encoding.color.field].scale"
+                v-if="activeLayer.encoding.color && activeLayer.encoding.color.field && columns[activeLayer.encoding.color.field].scale"
                 class="text-gray-700 text-sm mt-1"
-              >Domain scale set to {{ columns[activeLayer.encoding.color.field].scale.domain }}</div>
+              >
+                <span
+                  v-if="activeLayer.encoding.color.aggregate === undefined || activeLayer.encoding.color.aggregate === 'average' || activeLayer.encoding.color.aggregate === 'median'"
+                >Domain scale set to {{ columns[activeLayer.encoding.color.field].scale.domain }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -211,7 +223,7 @@ export default {
     addLayer() {
       this.layersBase.push({
         main: { encoding: {} },
-        config: { encoding: { x: {}, y: {} } },
+        config: { encoding: { x: {}, y: {}, color: {} } },
       })
     },
     updateEncoding(type, event) {
