@@ -220,11 +220,13 @@ export default {
     },
   },
   methods: {
-    addLayer() {
-      this.layersBase.push({
+    async addLayer() {
+      const newLength = this.layersBase.push({
         main: { encoding: {} },
         config: { encoding: { x: {}, y: {}, color: {} } },
       })
+      await this.$nextTick()
+      this.activeLayerIndex = newLength - 1
     },
     updateEncoding(type, event) {
       const { value } = event.target
