@@ -23,34 +23,12 @@
           <h3>Customise layer {{ activeLayerIndex + 1 }}</h3>
           <div>
             <div>
-              <div class="font-semibold">Mark</div>
+              <div class="font-semibold text-lg">Mark</div>
               <Dropdown
                 :options="['bar', 'line', 'area']"
                 :value="activeLayer.mark"
                 @input="updateEncoding('mark', $event)"
               />
-            </div>
-            <div class="mt-2">
-              <div class="font-semibold text-lg">X axis</div>
-              <Dropdown
-                :options="Object.keys(columns)"
-                :value="activeLayer.encoding.x.field"
-                @input="updateEncoding('x', $event)"
-              />
-              <div
-                v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].type === 'quantitative'"
-              >
-                <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
-                <Dropdown
-                  :options="['count', 'average', 'sum']"
-                  :value="activeLayer.encoding.x.aggregate"
-                  @input="updateAggregation('x', $event)"
-                />
-              </div>
-              <div
-                v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].scale"
-                class="text-gray-700 text-sm"
-              >{{ columns[activeLayer.encoding.x.field].scale.domain }}</div>
             </div>
             <div class="mt-2">
               <div class="font-semibold text-lg">Y axis</div>
@@ -64,18 +42,59 @@
               >
                 <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
                 <Dropdown
-                  :options="['count', 'average', 'sum']"
+                  :options="['', 'count', 'average', 'sum']"
                   :value="activeLayer.encoding.y.aggregate"
                   @input="updateAggregation('y', $event)"
                 />
               </div>
               <div
                 v-if="activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].scale"
-                class="text-gray-700 text-sm"
+                class="text-gray-700 text-sm mt-1"
+              >Domain scale set to {{ columns[activeLayer.encoding.y.field].scale.domain }}</div>
+            </div>
+            <div class="mt-2">
+              <div class="font-semibold text-lg">X axis</div>
+              <Dropdown
+                :options="Object.keys(columns)"
+                :value="activeLayer.encoding.x.field"
+                @input="updateEncoding('x', $event)"
+              />
+              <div
+                v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].type === 'quantitative'"
               >
-                Domain scale set to
-                {{ columns[activeLayer.encoding.y.field].scale.domain }}
+                <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
+                <Dropdown
+                  :options="['', 'count', 'average', 'sum']"
+                  :value="activeLayer.encoding.x.aggregate"
+                  @input="updateAggregation('x', $event)"
+                />
               </div>
+              <div
+                v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].scale"
+                class="text-gray-700 text-sm"
+              >Domain scale set to {{ columns[activeLayer.encoding.x.field].scale.domain }}</div>
+            </div>
+            <div class="mt-2">
+              <div class="font-semibold text-lg">Colour</div>
+              <Dropdown
+                :options="['', ...Object.keys(columns)]"
+                :value="activeLayer.encoding.color && activeLayer.encoding.color.field || ''"
+                @input="updateEncoding('color', $event)"
+              />
+              <div
+                v-if="activeLayer.encoding.color && columns[activeLayer.encoding.color.field].type === 'quantitative'"
+              >
+                <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
+                <Dropdown
+                  :options="['', 'count', 'average', 'sum']"
+                  :value="activeLayer.encoding.color.aggregate"
+                  @input="updateAggregation('color', $event)"
+                />
+              </div>
+              <div
+                v-if="activeLayer.encoding.color && columns[activeLayer.encoding.color.field].scale"
+                class="text-gray-700 text-sm mt-1"
+              >Domain scale set to {{ columns[activeLayer.encoding.color.field].scale.domain }}</div>
             </div>
           </div>
         </div>
@@ -152,18 +171,21 @@ export default {
         mark,
         encoding: mapObject(
           encoding,
-          ([key, { aggregate, scale, ...rest }]) => [
+          ([key, { aggregate, scale, field, ...rest }]) => [
             key,
-            {
-              ...rest,
-              aggregate,
-              scale:
-                aggregate === undefined ||
-                aggregate === "average" ||
-                aggregate === "median"
-                  ? scale
-                  : undefined,
-            },
+            field === ""
+              ? undefined
+              : {
+                  ...rest,
+                  field,
+                  aggregate,
+                  scale:
+                    aggregate === undefined ||
+                    aggregate === "average" ||
+                    aggregate === "median"
+                      ? scale
+                      : undefined,
+                },
           ],
         ),
       }))
@@ -188,7 +210,7 @@ export default {
       const { value } = event.target
       if (type === "mark") {
         this.layersBase[this.activeLayerIndex].main.mark = value
-      } else if (type === "x" || type === "y") {
+      } else if (type === "x" || type === "y" || type === "color") {
         this.$set(
           this.layersBase[this.activeLayerIndex].main.encoding,
           type,
