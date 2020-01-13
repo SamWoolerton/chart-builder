@@ -5,7 +5,10 @@
       <section>
         <div>
           <h3>Layers</h3>
-          <button @click="layersBase.push({ main: {}, config: {} })" class="my-2">Add layer</button>
+          <button
+            @click="layersBase.push({ main: {encoding: {x: {}, y: {}}}, config: {} })"
+            class="my-2"
+          >Add layer</button>
           <div v-if="layersBase.length === 0">You don't have any layers</div>
           <div v-else>
             <div
@@ -38,7 +41,7 @@
                 @input="updateEncoding('x', $event)"
               />
               <div
-                v-if="columns[activeLayer.encoding.x.field].scale"
+                v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].scale"
                 class="text-gray-700 text-sm"
               >{{ columns[activeLayer.encoding.x.field].scale.domain }}</div>
             </div>
@@ -49,7 +52,10 @@
                 :value="activeLayer.encoding.y.field"
                 @input="updateEncoding('y', $event)"
               />
-              <div v-if="columns[activeLayer.encoding.y.field].scale" class="text-gray-700 text-sm">
+              <div
+                v-if="activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].scale"
+                class="text-gray-700 text-sm"
+              >
                 Domain scale set to
                 {{ columns[activeLayer.encoding.y.field].scale.domain }}
               </div>
@@ -119,14 +125,15 @@ export default {
     ],
   }),
   computed: {
+    mergedLayers() {
+      return this.layersBase.map(({ main, config }) => deepmerge(main, config))
+    },
     layers() {
       const validLayer = layer => !!layer.mark
-      return this.layersBase
-        .map(({ main, config }) => deepmerge(main, config))
-        .filter(validLayer)
+      return this.mergedLayers.filter(validLayer)
     },
     activeLayer() {
-      return this.layers[this.activeLayerIndex]
+      return this.mergedLayers[this.activeLayerIndex]
     },
   },
   methods: {
