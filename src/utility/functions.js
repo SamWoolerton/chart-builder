@@ -26,3 +26,5 @@ export const loadCSV = async path => {
 export const removeChildren = el => {
   while (el.firstChild && !el.firstChild.remove());
 }
+export const mapObject = (obj, fn) =>
+  Object.fromEntries(Object.entries(obj).map(fn))

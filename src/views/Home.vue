@@ -5,10 +5,7 @@
       <section>
         <div>
           <h3>Layers</h3>
-          <button
-            @click="layersBase.push({ main: {encoding: {x: {}, y: {}}}, config: {} })"
-            class="my-2"
-          >Add layer</button>
+          <button @click="addLayer" class="my-2">Add layer</button>
           <div v-if="layersBase.length === 0">You don't have any layers</div>
           <div v-else>
             <div
@@ -17,13 +14,13 @@
               @click="activeLayerIndex = index"
               class="cursor-pointer"
             >
-              Layer {{ index }}
+              Layer {{ index + 1 }}
               {{ index === activeLayerIndex ? "(active)" : "" }}
             </div>
           </div>
         </div>
         <div class="mt-4">
-          <h3>Customise layer {{ activeLayerIndex }}</h3>
+          <h3>Customise layer {{ activeLayerIndex + 1 }}</h3>
           <div>
             <div>
               <div class="font-semibold">Mark</div>
@@ -34,24 +31,44 @@
               />
             </div>
             <div class="mt-2">
-              <div class="font-semibold">X axis</div>
+              <div class="font-semibold text-lg">X axis</div>
               <Dropdown
                 :options="Object.keys(columns)"
                 :value="activeLayer.encoding.x.field"
                 @input="updateEncoding('x', $event)"
               />
               <div
+                v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].type === 'quantitative'"
+              >
+                <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
+                <Dropdown
+                  :options="['count', 'average', 'sum']"
+                  :value="activeLayer.encoding.x.aggregate"
+                  @input="updateAggregation('x', $event)"
+                />
+              </div>
+              <div
                 v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].scale"
                 class="text-gray-700 text-sm"
               >{{ columns[activeLayer.encoding.x.field].scale.domain }}</div>
             </div>
             <div class="mt-2">
-              <div class="font-semibold">Y axis</div>
+              <div class="font-semibold text-lg">Y axis</div>
               <Dropdown
                 :options="Object.keys(columns)"
                 :value="activeLayer.encoding.y.field"
                 @input="updateEncoding('y', $event)"
               />
+              <div
+                v-if="activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].type === 'quantitative'"
+              >
+                <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
+                <Dropdown
+                  :options="['count', 'average', 'sum']"
+                  :value="activeLayer.encoding.y.aggregate"
+                  @input="updateAggregation('y', $event)"
+                />
+              </div>
               <div
                 v-if="activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].scale"
                 class="text-gray-700 text-sm"
@@ -77,6 +94,8 @@ import Chart from "../components/Chart"
 import ConfigPane from "../components/ConfigPane"
 import Dropdown from "../components/ui/Dropdown"
 
+import { mapObject } from "../utility/functions"
+
 export default {
   components: { DataPane, Chart, ConfigPane, Dropdown },
   data: () => ({
@@ -97,18 +116,9 @@ export default {
         main: {
           mark: "bar",
           encoding: {
-            x: {
-              field: "MPAA_Rating",
-              type: "nominal",
-            },
-            y: {
-              field: "IMDB_Rating",
-              type: "quantitative",
-            },
-            color: {
-              field: "IMDB_Rating",
-              type: "quantitative",
-            },
+            x: "MPAA_Rating",
+            y: "IMDB_Rating",
+            color: "IMDB_Rating",
           },
         },
         config: {
@@ -126,27 +136,73 @@ export default {
   }),
   computed: {
     mergedLayers() {
-      return this.layersBase.map(({ main, config }) => deepmerge(main, config))
-    },
-    layers() {
-      const validLayer = layer => !!layer.mark
-      return this.mergedLayers.filter(validLayer)
+      const processMain = ({ mark, encoding }) => ({
+        mark,
+        encoding: mapObject(encoding, ([key, value]) => [
+          key,
+          { field: value, ...this.columns[value] },
+        ]),
+      })
+
+      const layers = this.layersBase.map(({ main, config }) =>
+        deepmerge(processMain(main), config),
+      )
+
+      return layers.map(({ mark, encoding }) => ({
+        mark,
+        encoding: mapObject(
+          encoding,
+          ([key, { aggregate, scale, ...rest }]) => [
+            key,
+            {
+              ...rest,
+              aggregate,
+              scale:
+                aggregate === undefined ||
+                aggregate === "average" ||
+                aggregate === "median"
+                  ? scale
+                  : undefined,
+            },
+          ],
+        ),
+      }))
     },
     activeLayer() {
       return this.mergedLayers[this.activeLayerIndex]
     },
+    layers() {
+      const validLayer = layer =>
+        !!layer.mark && !!layer.encoding.x.field && !!layer.encoding.y.field
+      return this.mergedLayers.filter(validLayer)
+    },
   },
   methods: {
+    addLayer() {
+      this.layersBase.push({
+        main: { encoding: {} },
+        config: { encoding: { x: {}, y: {} } },
+      })
+    },
     updateEncoding(type, event) {
       const { value } = event.target
       if (type === "mark") {
         this.layersBase[this.activeLayerIndex].main.mark = value
       } else if (type === "x" || type === "y") {
-        this.$set(this.layersBase[this.activeLayerIndex].main.encoding, type, {
-          field: value,
-          ...this.columns[value],
-        })
+        this.$set(
+          this.layersBase[this.activeLayerIndex].main.encoding,
+          type,
+          value,
+        )
       }
+    },
+    updateAggregation(type, event) {
+      const { value } = event.target
+      this.$set(
+        this.layersBase[this.activeLayerIndex].config.encoding[type],
+        "aggregate",
+        value,
+      )
     },
   },
 }
