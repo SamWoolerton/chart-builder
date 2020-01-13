@@ -7,17 +7,17 @@
           <h3>Layers</h3>
           <button @click="addLayer" class="my-2">Add layer</button>
           <div v-if="layersBase.length === 0">You don't have any layers</div>
-          <div v-else>
-            <div
-              v-for="(layer, index) in layersBase"
-              :key="index"
-              @click="activeLayerIndex = index"
-              class="cursor-pointer"
-            >
+          <select
+            v-else
+            :value="activeLayerIndex"
+            @input="activeLayerIndex = +$event.target.value"
+            class="bg-gray-200 px-3 py-2 cursor-pointer"
+          >
+            <option v-for="(layer, index) in layersBase" :key="index" :value="index">
               Layer {{ index + 1 }}
               {{ index === activeLayerIndex ? "(active)" : "" }}
-            </div>
-          </div>
+            </option>
+          </select>
         </div>
         <div class="mt-4">
           <h3>Customise layer {{ activeLayerIndex + 1 }}</h3>
@@ -154,6 +154,14 @@ export default {
     ],
   }),
   computed: {
+    layerOptions() {
+      return this.layersBase.map(
+        (_layer, index) =>
+          `Layer ${index + 1}${
+            index === this.activeLayerIndex ? " (active)" : ""
+          }`,
+      )
+    },
     mergedLayers() {
       const processMain = ({ mark, encoding }) => ({
         mark,
