@@ -1,0 +1,11 @@
+.drop-target {
+  padding: 0.125rem;
+
+  &.over {
+    background: orange;
+  }
+
+  select {
+    width: 100%;
+  }
+}

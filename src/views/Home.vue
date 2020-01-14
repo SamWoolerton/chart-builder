@@ -13,7 +13,11 @@
             @input="activeLayerIndex = +$event.target.value"
             class="bg-gray-200 px-3 py-2 cursor-pointer"
           >
-            <option v-for="(layer, index) in layersBase" :key="index" :value="index">
+            <option
+              v-for="(layer, index) in layersBase"
+              :key="index"
+              :value="index"
+            >
               Layer {{ index + 1 }}
               {{ index === activeLayerIndex ? "(active)" : "" }}
             </option>
@@ -27,7 +31,9 @@
               <Dropdown
                 :options="['bar', 'line', 'area']"
                 :value="activeLayer.mark"
-                @input="updateEncoding('mark', $event)"
+                @input="
+                  updateEncoding({ field: 'mark', value: $event.target.value })
+                "
               />
             </div>
             <SetEncoding
@@ -149,7 +155,7 @@ export default {
     },
     updateEncoding({ field: type, value }) {
       if (type === "mark") {
-        this.layersBase[this.activeLayerIndex].main.mark = value
+        this.$set(this.layersBase[this.activeLayerIndex].main, "mark", value)
       } else if (type === "x" || type === "y" || type === "color") {
         this.$set(
           this.layersBase[this.activeLayerIndex].main.encoding,

@@ -3,17 +3,25 @@
     <div>
       <div class="font-bold mb-2">Available data columns</div>
       <div>
-        <div v-for="col in cols" :key="col.field">
-          <span class="mr-2 text-gray-700 text-sm">{{ col.prefix }}</span>
+        <drag
+          v-for="col in cols"
+          :key="col.field"
+          :transfer-data="{ field: col.field }"
+          class="bg-gray-200 px-3 py-1 mt-1 text-sm rounded-full"
+        >
+          <span class="mr-2 text-gray-700 text-xs">{{ col.prefix }}</span>
           <span>{{ col.field }}</span>
-        </div>
+        </drag>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import { Drag } from "vue-drag-drop"
+
 export default {
+  components: { Drag },
   props: {
     columns: {
       type: Object,
