@@ -30,84 +30,31 @@
                 @input="updateEncoding('mark', $event)"
               />
             </div>
-            <div class="mt-2">
-              <div class="font-semibold text-lg">Y axis</div>
-              <Dropdown
-                :options="Object.keys(columns)"
-                :value="activeLayer.encoding.y && activeLayer.encoding.y.field"
-                @input="updateEncoding('y', $event)"
-              />
-              <div
-                v-if="activeLayer.encoding.y && activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].type === 'quantitative'"
-              >
-                <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
-                <Dropdown
-                  :options="['', 'count', 'average', 'sum']"
-                  :value="activeLayer.encoding.y.aggregate"
-                  @input="updateAggregation('y', $event)"
-                />
-              </div>
-              <div
-                v-if="activeLayer.encoding.y && activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].scale"
-                class="text-gray-700 text-sm mt-1"
-              >
-                <span
-                  v-if="activeLayer.encoding.y.aggregate === undefined || activeLayer.encoding.y.aggregate === 'average' || activeLayer.encoding.y.aggregate === 'median'"
-                >Domain scale set to {{ columns[activeLayer.encoding.y.field].scale.domain }}</span>
-              </div>
-            </div>
-            <div class="mt-2">
-              <div class="font-semibold text-lg">X axis</div>
-              <Dropdown
-                :options="Object.keys(columns)"
-                :value="activeLayer.encoding.x && activeLayer.encoding.x.field"
-                @input="updateEncoding('x', $event)"
-              />
-              <div
-                v-if="activeLayer.encoding.x && activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].type === 'quantitative'"
-              >
-                <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
-                <Dropdown
-                  :options="['', 'count', 'average', 'sum']"
-                  :value="activeLayer.encoding.x.aggregate"
-                  @input="updateAggregation('x', $event)"
-                />
-              </div>
-              <div
-                v-if="activeLayer.encoding.x && activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].scale"
-                class="text-gray-700 text-sm"
-              >
-                <span
-                  v-if="activeLayer.encoding.x.aggregate === undefined || activeLayer.encoding.x.aggregate === 'average' || activeLayer.encoding.x.aggregate === 'median'"
-                >Domain scale set to {{ columns[activeLayer.encoding.x.field].scale.domain }}</span>
-              </div>
-            </div>
-            <div class="mt-2">
-              <div class="font-semibold text-lg">Colour</div>
-              <Dropdown
-                :options="['', ...Object.keys(columns)]"
-                :value="activeLayer.encoding.color && activeLayer.encoding.color.field || ''"
-                @input="updateEncoding('color', $event)"
-              />
-              <div
-                v-if="activeLayer.encoding.color && activeLayer.encoding.color.field && columns[activeLayer.encoding.color.field].type === 'quantitative'"
-              >
-                <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
-                <Dropdown
-                  :options="['', 'count', 'average', 'sum']"
-                  :value="activeLayer.encoding.color.aggregate"
-                  @input="updateAggregation('color', $event)"
-                />
-              </div>
-              <div
-                v-if="activeLayer.encoding.color && activeLayer.encoding.color.field && columns[activeLayer.encoding.color.field].scale"
-                class="text-gray-700 text-sm mt-1"
-              >
-                <span
-                  v-if="activeLayer.encoding.color.aggregate === undefined || activeLayer.encoding.color.aggregate === 'average' || activeLayer.encoding.color.aggregate === 'median'"
-                >Domain scale set to {{ columns[activeLayer.encoding.color.field].scale.domain }}</span>
-              </div>
-            </div>
+            <SetEncoding
+              :label="'Y axis'"
+              :field="'y'"
+              :encoding="activeLayer.encoding"
+              :columns="columns"
+              @updateField="updateEncoding"
+              @updateAggregation="updateAggregation"
+            />
+            <SetEncoding
+              :label="'X axis'"
+              :field="'x'"
+              :encoding="activeLayer.encoding"
+              :columns="columns"
+              @updateField="updateEncoding"
+              @updateAggregation="updateAggregation"
+            />
+            <SetEncoding
+              :label="'Colour'"
+              :field="'color'"
+              :encoding="activeLayer.encoding"
+              :canBeBlank="true"
+              :columns="columns"
+              @updateField="updateEncoding"
+              @updateAggregation="updateAggregation"
+            />
           </div>
         </div>
       </section>
@@ -124,11 +71,12 @@ import DataPane from "../components/DataPane"
 import Chart from "../components/Chart"
 import ConfigPane from "../components/ConfigPane"
 import Dropdown from "../components/ui/Dropdown"
+import SetEncoding from "../components/custom/SetEncoding"
 
 import { mapObject } from "../utility/functions"
 
 export default {
-  components: { DataPane, Chart, ConfigPane, Dropdown },
+  components: { DataPane, Chart, ConfigPane, Dropdown, SetEncoding },
   data: () => ({
     data: {
       url: "https://vega.github.io/editor/data/movies.json",
@@ -230,8 +178,7 @@ export default {
       await this.$nextTick()
       this.activeLayerIndex = newLength - 1
     },
-    updateEncoding(type, event) {
-      const { value } = event.target
+    updateEncoding({ field: type, value }) {
       if (type === "mark") {
         this.layersBase[this.activeLayerIndex].main.mark = value
       } else if (type === "x" || type === "y" || type === "color") {
@@ -242,8 +189,7 @@ export default {
         )
       }
     },
-    updateAggregation(type, event) {
-      const { value } = event.target
+    updateAggregation({ field: type, value }) {
       this.$set(
         this.layersBase[this.activeLayerIndex].config.encoding[type],
         "aggregate",
