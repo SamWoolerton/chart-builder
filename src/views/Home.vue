@@ -75,43 +75,13 @@ import SetEncoding from "../components/custom/SetEncoding"
 
 import { mapObject } from "../utility/functions"
 
+import { movies } from "../demos"
+
 export default {
   components: { DataPane, Chart, ConfigPane, Dropdown, SetEncoding },
   data: () => ({
-    data: {
-      url: "https://vega.github.io/editor/data/movies.json",
-    },
-    columns: {
-      IMDB_Rating: { type: "quantitative", scale: { domain: [0, 10] } },
-      US_Gross: { type: "quantitative" },
-      Worldwide_Gross: { type: "quantitative" },
-      Production_Budget: { type: "quantitative" },
-      MPAA_Rating: { type: "nominal" },
-      Title: { type: "nominal" },
-    },
+    ...movies,
     activeLayerIndex: 0,
-    layersBase: [
-      {
-        main: {
-          mark: "bar",
-          encoding: {
-            x: "MPAA_Rating",
-            y: "IMDB_Rating",
-            color: "IMDB_Rating",
-          },
-        },
-        config: {
-          encoding: {
-            y: {
-              aggregate: "average",
-            },
-            color: {
-              aggregate: "average",
-            },
-          },
-        },
-      },
-    ],
   }),
   computed: {
     layerOptions() {
