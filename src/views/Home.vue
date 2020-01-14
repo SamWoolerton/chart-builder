@@ -74,6 +74,7 @@ import Dropdown from "../components/ui/Dropdown"
 import SetEncoding from "../components/custom/SetEncoding"
 
 import { mapObject } from "../utility/functions"
+import { validLayer, blankLayer } from "../utility/layers"
 
 import { movies } from "../demos"
 
@@ -93,6 +94,9 @@ export default {
       )
     },
     mergedLayers() {
+      // TODO: use Qim or equivalent to clean up this logic
+
+      // replace encoding with values from column
       const processMain = ({ mark, encoding }) => ({
         mark,
         encoding: mapObject(encoding, ([key, value]) => [
@@ -105,6 +109,8 @@ export default {
         deepmerge(processMain(main), config),
       )
 
+      // if field is blank or undefined then undefined (filter invalid encodings out of spec)
+      // if aggregate set and would be different to scale, unset scale
       return layers.map(({ mark, encoding }) => ({
         mark,
         encoding: mapObject(
@@ -132,19 +138,12 @@ export default {
       return this.mergedLayers[this.activeLayerIndex]
     },
     layers() {
-      const validLayer = layer =>
-        !!layer.mark &&
-        !!(layer.encoding.x && layer.encoding.x.field) &&
-        !!(layer.encoding.y && layer.encoding.y.field)
       return this.mergedLayers.filter(validLayer)
     },
   },
   methods: {
     async addLayer() {
-      const newLength = this.layersBase.push({
-        main: { encoding: {} },
-        config: { encoding: { x: {}, y: {}, color: {} } },
-      })
+      const newLength = this.layersBase.push({ ...blankLayer })
       await this.$nextTick()
       this.activeLayerIndex = newLength - 1
     },
