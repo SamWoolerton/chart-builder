@@ -76,12 +76,12 @@ import SetEncoding from "../components/custom/SetEncoding"
 import { mapObject } from "../utility/functions"
 import { validLayer, blankLayer } from "../utility/layers"
 
-import { movies } from "../demos"
+import demos from "../demos"
 
 export default {
   components: { DataPane, Chart, ConfigPane, Dropdown, SetEncoding },
   data: () => ({
-    ...movies,
+    ...demos.movies,
     activeLayerIndex: 0,
   }),
   computed: {
