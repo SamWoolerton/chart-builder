@@ -34,11 +34,11 @@
               <div class="font-semibold text-lg">Y axis</div>
               <Dropdown
                 :options="Object.keys(columns)"
-                :value="activeLayer.encoding.y.field"
+                :value="activeLayer.encoding.y && activeLayer.encoding.y.field"
                 @input="updateEncoding('y', $event)"
               />
               <div
-                v-if="activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].type === 'quantitative'"
+                v-if="activeLayer.encoding.y && activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].type === 'quantitative'"
               >
                 <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
                 <Dropdown
@@ -48,7 +48,7 @@
                 />
               </div>
               <div
-                v-if="activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].scale"
+                v-if="activeLayer.encoding.y && activeLayer.encoding.y.field && columns[activeLayer.encoding.y.field].scale"
                 class="text-gray-700 text-sm mt-1"
               >
                 <span
@@ -60,11 +60,11 @@
               <div class="font-semibold text-lg">X axis</div>
               <Dropdown
                 :options="Object.keys(columns)"
-                :value="activeLayer.encoding.x.field"
+                :value="activeLayer.encoding.x && activeLayer.encoding.x.field"
                 @input="updateEncoding('x', $event)"
               />
               <div
-                v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].type === 'quantitative'"
+                v-if="activeLayer.encoding.x && activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].type === 'quantitative'"
               >
                 <div class="text-gray-700 font-semibold text-sm mt-2">Aggregation (optional)</div>
                 <Dropdown
@@ -74,7 +74,7 @@
                 />
               </div>
               <div
-                v-if="activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].scale"
+                v-if="activeLayer.encoding.x && activeLayer.encoding.x.field && columns[activeLayer.encoding.x.field].scale"
                 class="text-gray-700 text-sm"
               >
                 <span
@@ -193,7 +193,7 @@ export default {
           encoding,
           ([key, { aggregate, scale, field, ...rest }]) => [
             key,
-            field === ""
+            field === "" || field === undefined
               ? undefined
               : {
                   ...rest,
@@ -215,7 +215,9 @@ export default {
     },
     layers() {
       const validLayer = layer =>
-        !!layer.mark && !!layer.encoding.x.field && !!layer.encoding.y.field
+        !!layer.mark &&
+        !!(layer.encoding.x && layer.encoding.x.field) &&
+        !!(layer.encoding.y && layer.encoding.y.field)
       return this.mergedLayers.filter(validLayer)
     },
   },
