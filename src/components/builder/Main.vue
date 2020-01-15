@@ -2,85 +2,17 @@
   <div>
     <div class="flex w-full pane-wrapper">
       <DataPane :columns="columns" />
-      <section>
-        <div>
-          <h3>Layers</h3>
-          <button @click="addLayer" class="my-2">Add layer</button>
-          <div v-if="layersBase.length === 0">You don't have any layers</div>
-          <select
-            v-else
-            :value="activeLayerIndex"
-            @input="$event => { activeLayerIndex = +$event.target.value; editLayerName = false }"
-            class="bg-gray-200 px-3 py-2 cursor-pointer"
-          >
-            <option
-              v-for="({ name }, index) in augmentedLayers"
-              :key="index"
-              :value="index"
-            >{{ name }} {{ activeLayerIndex === index ? "(active)" : "" }}</option>
-          </select>
-          <div v-if="inactiveLayersErrors" class="text-red-600 text-sm">Some layers need attention</div>
-          <button
-            v-if="layersBase.length > 1"
-            @click="deleteLayer(activeLayerIndex)"
-          >Delete current layer</button>
-        </div>
-        <div class="mt-4">
-          <h3>
-            Customise
-            <span v-if="!editLayerName" @dblclick="editName">{{ activeLayer.name }}</span>
-            <input
-              v-else
-              id="editLayerName"
-              v-model="layersBase[activeLayerIndex].name"
-              @blur="editLayerName = false"
-              @keydown.enter="editLayerName = false"
-            />
-            <span
-              v-if="!editLayerName"
-              @click="editName"
-              class="cursor-pointer bg-gray-200 px-2 py-1"
-            >Edit</span>
-          </h3>
-          <div>
-            <div>
-              <div class="font-semibold text-lg">Mark</div>
-              <Dropdown
-                :options="['bar', 'line', 'area']"
-                :value="activeLayer.mark"
-                @input="
-                  updateEncoding({ field: 'mark', value: $event.target.value })
-                "
-              />
-            </div>
-            <SetEncoding
-              :label="'Y axis'"
-              :field="'y'"
-              :encoding="activeLayer.encoding"
-              :columns="columns"
-              @updateField="updateEncoding"
-              @updateAggregation="updateAggregation"
-            />
-            <SetEncoding
-              :label="'X axis'"
-              :field="'x'"
-              :encoding="activeLayer.encoding"
-              :columns="columns"
-              @updateField="updateEncoding"
-              @updateAggregation="updateAggregation"
-            />
-            <SetEncoding
-              :label="'Colour'"
-              :field="'color'"
-              :encoding="activeLayer.encoding"
-              :canBeBlank="true"
-              :columns="columns"
-              @updateField="updateEncoding"
-              @updateAggregation="updateAggregation"
-            />
-          </div>
-        </div>
-      </section>
+      <EncodingPane
+        :activeLayerIndex="activeLayerIndex"
+        :layersBase="layersBase"
+        :augmentedLayers="augmentedLayers"
+        :columns="columns"
+        @addLayer="addLayer"
+        @selectLayer="activeLayerIndex = $event"
+        @deleteLayer="deleteLayer"
+        @updateEncoding="updateEncoding"
+        @updateAggregation="updateAggregation"
+      />
       <ConfigPane />
       <Chart :data="data" :layers="layers" />
     </div>
@@ -91,18 +23,22 @@
 import deepmerge from "deepmerge"
 
 import DataPane from "./DataPane"
+import EncodingPane from "./EncodingPane"
 import Chart from "./Chart"
 import ConfigPane from "./ConfigPane"
-import Dropdown from "../ui/Dropdown"
-import SetEncoding from "./SetEncoding"
 
-import { getEl, mapObject, min } from "../../utility/functions"
+import { mapObject, min } from "../../utility/functions"
 import { validLayer, blankLayer } from "../../utility/layers"
 
 import demos from "../../demos"
 
 export default {
-  components: { DataPane, Chart, ConfigPane, Dropdown, SetEncoding },
+  components: {
+    DataPane,
+    EncodingPane,
+    Chart,
+    ConfigPane,
+  },
   props: {
     data: {
       type: Object,
@@ -120,7 +56,6 @@ export default {
   data: () => ({
     layersBase: [blankLayer],
     activeLayerIndex: 0,
-    editLayerName: false,
   }),
   watch: {
     demo: {
@@ -186,11 +121,6 @@ export default {
     activeLayer() {
       return this.augmentedLayers[this.activeLayerIndex]
     },
-    inactiveLayersErrors() {
-      return this.augmentedLayers.some(
-        ({ valid }, index) => index !== this.activeLayerIndex && !valid,
-      )
-    },
     layers() {
       return (
         this.augmentedLayers
@@ -230,11 +160,6 @@ export default {
         "aggregate",
         value,
       )
-    },
-    async editName() {
-      this.editLayerName = true
-      await this.$nextTick()
-      getEl("editLayerName").focus()
     },
   },
 }
