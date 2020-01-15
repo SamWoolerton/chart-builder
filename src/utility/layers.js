@@ -4,6 +4,7 @@ export const validLayer = layer =>
   !!(layer.encoding.y && layer.encoding.y.field)
 
 export const blankLayer = {
+  name: "Layer 1",
   main: { encoding: {} },
   config: { encoding: { x: {}, y: {}, color: {} } },
 }
