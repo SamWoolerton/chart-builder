@@ -14,17 +14,15 @@
             class="bg-gray-200 px-3 py-2 cursor-pointer"
           >
             <option
-              v-for="(layer, index) in layersBase"
-              :key="index"
+              v-for="({ name }, index) in augmentedLayers"
+              :key="name"
               :value="index"
-            >
-              Layer {{ index + 1 }}
-              {{ index === activeLayerIndex ? "(active)" : "" }}
-            </option>
+            >{{ name }} {{ activeLayerIndex === index ? "(active)" : "" }}</option>
           </select>
+          <div v-if="inactiveLayersErrors" class="text-red-600 text-sm">Some layers need attention</div>
         </div>
         <div class="mt-4">
-          <h3>Customise layer {{ activeLayerIndex + 1 }}</h3>
+          <h3>Customise {{ activeLayer.name }}</h3>
           <div>
             <div>
               <div class="font-semibold text-lg">Mark</div>
@@ -91,14 +89,6 @@ export default {
     activeLayerIndex: 0,
   }),
   computed: {
-    layerOptions() {
-      return this.layersBase.map(
-        (_layer, index) =>
-          `Layer ${index + 1}${
-            index === this.activeLayerIndex ? " (active)" : ""
-          }`,
-      )
-    },
     mergedLayers() {
       // TODO: use Qim or equivalent to clean up this logic
 
@@ -140,11 +130,28 @@ export default {
         ),
       }))
     },
+    augmentedLayers() {
+      return this.mergedLayers.map((layer, index) => ({
+        ...layer,
+        valid: validLayer(layer),
+        name: layer.name || `Layer ${index + 1}`,
+      }))
+    },
     activeLayer() {
-      return this.mergedLayers[this.activeLayerIndex]
+      return this.augmentedLayers[this.activeLayerIndex]
+    },
+    inactiveLayersErrors() {
+      return this.augmentedLayers.some(
+        ({ valid }, index) => index !== this.activeLayerIndex && !valid,
+      )
     },
     layers() {
-      return this.mergedLayers.filter(validLayer)
+      return (
+        this.mergedLayers
+          .filter(({ valid }) => valid)
+          // eslint-disable-next-line
+          .map(({ valid, name, ...layer }) => layer)
+      )
     },
   },
   methods: {
