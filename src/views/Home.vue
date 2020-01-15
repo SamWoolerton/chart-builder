@@ -10,16 +10,20 @@
           <select
             v-else
             :value="activeLayerIndex"
-            @input="() => { activeLayerIndex = +$event.target.value; editLayerName = false }"
+            @input="$event => { activeLayerIndex = +$event.target.value; editLayerName = false }"
             class="bg-gray-200 px-3 py-2 cursor-pointer"
           >
             <option
               v-for="({ name }, index) in augmentedLayers"
-              :key="name"
+              :key="index"
               :value="index"
             >{{ name }} {{ activeLayerIndex === index ? "(active)" : "" }}</option>
           </select>
           <div v-if="inactiveLayersErrors" class="text-red-600 text-sm">Some layers need attention</div>
+          <button
+            v-if="layersBase.length > 1"
+            @click="deleteLayer(activeLayerIndex)"
+          >Delete current layer</button>
         </div>
         <div class="mt-4">
           <h3>
@@ -92,7 +96,7 @@ import ConfigPane from "../components/ConfigPane"
 import Dropdown from "../components/ui/Dropdown"
 import SetEncoding from "../components/custom/SetEncoding"
 
-import { getEl, mapObject } from "../utility/functions"
+import { getEl, mapObject, min } from "../utility/functions"
 import { validLayer, blankLayer } from "../utility/layers"
 
 import demos from "../demos"
@@ -176,6 +180,12 @@ export default {
       this.layersBase.push({ ...blankLayer, name: `Layer ${length}` })
       await this.$nextTick()
       this.activeLayerIndex = length
+    },
+    deleteLayer(index) {
+      // have to update active layer before removing current layer as it throws an error otherwise
+      const newMaxIndex = this.layersBase.length - 2
+      this.activeLayerIndex = min(index, newMaxIndex)
+      this.layersBase.splice(index, 1)
     },
     updateEncoding({ field: type, value }) {
       if (type === "mark") {

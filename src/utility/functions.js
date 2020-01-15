@@ -28,3 +28,5 @@ export const removeChildren = el => {
 }
 export const mapObject = (obj, fn) =>
   Object.fromEntries(Object.entries(obj).map(fn))
+export const max = (a, b) => (a > b ? a : b)
+export const min = (a, b) => (a < b ? a : b)
