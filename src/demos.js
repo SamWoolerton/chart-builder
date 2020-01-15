@@ -13,6 +13,7 @@ export default {
     },
     layersBase: [
       {
+        name: "Bar",
         main: {
           mark: "bar",
           encoding: {

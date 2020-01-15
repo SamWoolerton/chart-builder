@@ -10,7 +10,7 @@
           <select
             v-else
             :value="activeLayerIndex"
-            @input="activeLayerIndex = +$event.target.value"
+            @input="() => { activeLayerIndex = +$event.target.value; editLayerName = false }"
             class="bg-gray-200 px-3 py-2 cursor-pointer"
           >
             <option
@@ -22,7 +22,22 @@
           <div v-if="inactiveLayersErrors" class="text-red-600 text-sm">Some layers need attention</div>
         </div>
         <div class="mt-4">
-          <h3>Customise {{ activeLayer.name }}</h3>
+          <h3>
+            Customise
+            <span v-if="!editLayerName" @dblclick="editName">{{ activeLayer.name }}</span>
+            <input
+              v-else
+              id="editLayerName"
+              v-model="layersBase[activeLayerIndex].name"
+              @blur="editLayerName = false"
+              @keydown.enter="editLayerName = false"
+            />
+            <span
+              v-if="!editLayerName"
+              @click="editName"
+              class="cursor-pointer bg-gray-200 px-2 py-1"
+            >Edit</span>
+          </h3>
           <div>
             <div>
               <div class="font-semibold text-lg">Mark</div>
@@ -77,7 +92,7 @@ import ConfigPane from "../components/ConfigPane"
 import Dropdown from "../components/ui/Dropdown"
 import SetEncoding from "../components/custom/SetEncoding"
 
-import { mapObject } from "../utility/functions"
+import { getEl, mapObject } from "../utility/functions"
 import { validLayer, blankLayer } from "../utility/layers"
 
 import demos from "../demos"
@@ -87,6 +102,7 @@ export default {
   data: () => ({
     ...demos.movies,
     activeLayerIndex: 0,
+    editLayerName: false,
   }),
   computed: {
     mergedLayers() {
@@ -101,13 +117,14 @@ export default {
         ]),
       })
 
-      const layers = this.layersBase.map(({ main, config }) =>
-        deepmerge(processMain(main), config),
+      const layers = this.layersBase.map(({ name, main, config }) =>
+        deepmerge.all([{ name }, processMain(main), config]),
       )
 
       // if field is blank or undefined then undefined (filter invalid encodings out of spec)
       // if aggregate set and would be different to scale, unset scale
-      return layers.map(({ mark, encoding }) => ({
+      return layers.map(({ name, mark, encoding }) => ({
+        name,
         mark,
         encoding: mapObject(
           encoding,
@@ -131,10 +148,9 @@ export default {
       }))
     },
     augmentedLayers() {
-      return this.mergedLayers.map((layer, index) => ({
+      return this.mergedLayers.map(layer => ({
         ...layer,
         valid: validLayer(layer),
-        name: layer.name || `Layer ${index + 1}`,
       }))
     },
     activeLayer() {
@@ -147,7 +163,7 @@ export default {
     },
     layers() {
       return (
-        this.mergedLayers
+        this.augmentedLayers
           .filter(({ valid }) => valid)
           // eslint-disable-next-line
           .map(({ valid, name, ...layer }) => layer)
@@ -156,9 +172,10 @@ export default {
   },
   methods: {
     async addLayer() {
-      const newLength = this.layersBase.push({ ...blankLayer })
+      const length = this.layersBase.length
+      this.layersBase.push({ ...blankLayer, name: `Layer ${length}` })
       await this.$nextTick()
-      this.activeLayerIndex = newLength - 1
+      this.activeLayerIndex = length
     },
     updateEncoding({ field: type, value }) {
       if (type === "mark") {
@@ -177,6 +194,11 @@ export default {
         "aggregate",
         value,
       )
+    },
+    async editName() {
+      this.editLayerName = true
+      await this.$nextTick()
+      getEl("editLayerName").focus()
     },
   },
 }
