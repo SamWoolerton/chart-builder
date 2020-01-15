@@ -67,7 +67,8 @@ export default {
         )}
         {showScale && (
           <div class="text-gray-700 text-sm mt-1">
-            Domain scale set to {columns[validField].scale.domain}
+            Domain scale fixed at
+            {" " + columns[validField].scale.domain.join(" to ")}
           </div>
         )}
       </div>
