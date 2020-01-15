@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+<script>
 import { Drop } from "vue-drag-drop"
 import Dropdown from "../ui/Dropdown"
 
@@ -77,3 +76,18 @@ export default {
     )
   },
 }
+</script>
+
+<style lang="scss" scoped>
+.drop-target {
+  padding: 0.125rem;
+
+  &.over {
+    background: orange;
+  }
+
+  select {
+    width: 100%;
+  }
+}
+</style>

@@ -94,7 +94,7 @@ import DataPane from "./DataPane"
 import Chart from "./Chart"
 import ConfigPane from "./ConfigPane"
 import Dropdown from "../ui/Dropdown"
-import SetEncoding from "../custom/SetEncoding"
+import SetEncoding from "./SetEncoding"
 
 import { getEl, mapObject, min } from "../../utility/functions"
 import { validLayer, blankLayer } from "../../utility/layers"
