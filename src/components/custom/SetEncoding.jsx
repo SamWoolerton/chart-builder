@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Drop } from "vue-drag-drop"
 import Dropdown from "../ui/Dropdown"
 
