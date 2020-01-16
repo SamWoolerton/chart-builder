@@ -1,7 +1,7 @@
 export default {
   movies: {
     data: {
-      url: "https://vega.github.io/editor/data/movies.json",
+      url: "https://vega.github.io/vega-datasets/data/movies.json",
     },
     dataMethod: "url",
     columns: {

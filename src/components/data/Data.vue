@@ -15,6 +15,7 @@
         </div>
         <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
           <div class="mb-2">Use sample dataset</div>
+          <Dropdown :options="sampleNames" :value="sample" @input="selectSample" />
         </div>
       </div>
     </div>
@@ -81,10 +82,32 @@ export default {
   data: () => ({
     dataMethod: null,
     url: "",
+    sample: null,
+    samples: [
+      {
+        name: "Cars",
+        url: "https://vega.github.io/vega-datasets/data/cars.json",
+      },
+      {
+        name: "Iowa electricity",
+        url: "https://vega.github.io/vega-datasets/data/iowa-electricity.csv",
+      },
+      {
+        name: "Monarchs",
+        url: "https://vega.github.io/vega-datasets/data/monarchs.json",
+      },
+      {
+        name: "US employment",
+        url: "https://vega.github.io/vega-datasets/data/us-employment.csv",
+      },
+    ],
   }),
   computed: {
     data() {
       return this.baseData[this.dataMethod]
+    },
+    sampleNames() {
+      return this.samples.map(sample => sample.name)
     },
   },
   methods: {
@@ -94,6 +117,12 @@ export default {
     },
     selectFile(e) {
       this.updateData("file", e.target.files[0])
+    },
+    selectSample(e) {
+      const { value } = e.target
+      this.sample = value
+      const { url } = this.samples.find(({ name }) => name === value)
+      this.updateData("url", url)
     },
   },
 }
