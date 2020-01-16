@@ -66,7 +66,7 @@
         <div>
           <div class="font-semibold text-lg">Mark</div>
           <Dropdown
-            :options="['bar', 'line', 'area']"
+            :options="markOptions"
             :value="activeLayer.mark"
             @input="
               $emit('updateEncoding', {
@@ -144,6 +144,7 @@ export default {
     editLayerName: false,
     presetNames: Object.keys(presets),
     selectedPreset: null,
+    markOptions: ["bar", "line", "area", "point", "tick"],
   }),
   computed: {
     activeLayer() {
