@@ -8,8 +8,9 @@
       :previewData="previewData"
       @done="focusBuilder"
       @updateData="updateData"
+      @removeColumn="removeColumn"
     />
-    <Builder :data="data" :columns="columns" :demo="demo" />
+    <Builder v-if="loadedData.length > 0" :data="data" :columns="columns" :demo="demo" />
   </div>
 </template>
 
@@ -26,7 +27,7 @@ import demos from "../demos"
 const inferTypes = row =>
   mapObject(row, ([key, value]) => [
     key,
-    typeof value === "number" ? "quantitative" : "nominal",
+    { type: typeof value === "number" ? "quantitative" : "nominal" },
   ])
 
 export default {
@@ -74,6 +75,12 @@ export default {
       this.dataMethod = dataMethod
       this.columns = columns
       this.demo = demo
+    },
+    removeColumn(index) {
+      const name = Object.keys(this.columns)[index]
+      this.$delete(this.columns, name)
+      // eslint-disable-next-line
+      this.loadedData = this.loadedData.map(({ [name]: n, ...cell }) => cell)
     },
     focusBuilder() {
       smoothScrollTo("builder-root")

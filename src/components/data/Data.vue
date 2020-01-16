@@ -24,7 +24,12 @@
       <div v-else>
         <h3>Preview the data</h3>
         <div>
-          <Table :data="previewData" />
+          <Table :data="previewData">
+            <!-- <template v-slot:afterHeader="{ index }"> -->
+            <template v-slot:afterHeader="{ data: { index } }">
+              <span class="bg-gray-200 cursor-pointer" @click="$emit('removeColumn', index)">X</span>
+            </template>
+          </Table>
         </div>
         <button @click="$emit('done')">Go to builder</button>
       </div>

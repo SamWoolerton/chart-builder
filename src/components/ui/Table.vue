@@ -1,10 +1,13 @@
 <template>
   <table>
     <thead>
-      <th v-for="col in columns" :key="col">{{ col }}</th>
+      <th v-for="(col, index) in columns" :key="col">
+        {{ col }}
+        <slot name="afterHeader" :data="{ index }" />
+      </th>
     </thead>
     <tbody>
-      <slot name="before-body" />
+      <slot name="beforeFirstRow" />
       <tr v-for="(row, index) in data" :key="index">
         <td v-for="(value, key) in row" :key="key">{{ value }}</td>
       </tr>
