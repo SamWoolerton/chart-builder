@@ -15,7 +15,11 @@
         </div>
         <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
           <div class="mb-2">Use sample dataset</div>
-          <Dropdown :options="sampleNames" :value="sample" @input="selectSample" />
+          <Dropdown
+            :options="sampleNames"
+            :value="sample"
+            @input="selectSample"
+          />
         </div>
       </div>
     </div>
@@ -27,15 +31,24 @@
         <div class="overflow-x-auto">
           <Table :data="previewData">
             <template v-slot:afterHeader="{ data: { index } }">
-              <span class="bg-gray-200 cursor-pointer" @click="$emit('removeColumn', index)">X</span>
+              <span
+                class="bg-gray-200 cursor-pointer"
+                @click="$emit('removeColumn', index)"
+                >X</span
+              >
             </template>
             <template v-slot:beforeFirstRow>
               <tr>
                 <td v-for="({ type }, column) in columns" :key="column">
                   <Dropdown
-                    :options="['nominal', 'quantitative']"
+                    :options="['nominal', 'quantitative', 'temporal']"
                     :value="type"
-                    @input="$emit('updateColumnType', { column, type: $event.target.value })"
+                    @input="
+                      $emit('updateColumnType', {
+                        column,
+                        type: $event.target.value,
+                      })
+                    "
                   />
                 </td>
               </tr>
@@ -45,7 +58,9 @@
         <button
           @click="$emit('done')"
           class="mt-12 mx-auto block px-8 py-5 bg-blue-600"
-        >Go to builder</button>
+        >
+          Go to builder
+        </button>
       </div>
     </div>
   </div>

@@ -30,3 +30,6 @@ export const mapObject = (obj, fn) =>
   Object.fromEntries(Object.entries(obj).map(fn))
 export const max = (a, b) => (a > b ? a : b)
 export const min = (a, b) => (a < b ? a : b)
+// from https://stackoverflow.com/a/1353711/7170445
+export const isValidDate = dt => dt instanceof Date && !isNaN(dt)
+export const strIsValidDate = str => isValidDate(new Date(str))

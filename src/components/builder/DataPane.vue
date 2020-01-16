@@ -34,6 +34,7 @@ export default {
         quantitative: "123",
         nominal: "ABC",
         ordinal: "ABC",
+        temporal: "DATE",
       }
 
       return Object.entries(this.columns).map(([field, { type }]) => ({

@@ -24,7 +24,7 @@
 import Data from "../components/data/Data"
 import Builder from "../components/builder/Builder"
 
-import { mapObject } from "../utility/functions"
+import { mapObject, strIsValidDate } from "../utility/functions"
 import { smoothScrollTo } from "../utility/scroll"
 import { fetchData, readData } from "../utility/data"
 
@@ -33,7 +33,14 @@ import demos from "../demos"
 const inferTypes = row =>
   mapObject(row, ([key, value]) => [
     key,
-    { type: typeof value === "number" ? "quantitative" : "nominal" },
+    {
+      type:
+        typeof value === "number"
+          ? "quantitative"
+          : strIsValidDate(value)
+          ? "temporal"
+          : "nominal",
+    },
   ])
 
 export default {
