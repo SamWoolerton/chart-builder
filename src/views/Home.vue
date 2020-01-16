@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <Data
       :baseData="baseData"
       :columns="columns"
@@ -17,6 +17,14 @@
       :columns="columns"
       :demo="demo"
     />
+    <div
+      class="absolute bottom-0 inset-x-0 mb-3 text-center text-sm color-gray-700"
+    >
+      This project uses
+      <a href="https://vega.github.io/vega-lite/" class="font-semibold"
+        >Vega-Lite</a
+      >
+    </div>
   </div>
 </template>
 
