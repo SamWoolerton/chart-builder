@@ -63,7 +63,7 @@ export default {
     },
   },
   mounted() {
-    // this.useDemo("movies")
+    this.useDemo("movies")
   },
   methods: {
     async updateData({ method, value }) {
@@ -80,13 +80,16 @@ export default {
 
       this.columns = inferTypes(this.loadedData[0] || {})
       this.loading = false
+      return
     },
-    useDemo(demo) {
+    async useDemo(demo) {
       const { data, dataMethod, columns } = demos[demo]
-      this.baseData = data
-      this.dataMethod = dataMethod
-      this.columns = columns
       this.demo = demo
+      await this.updateData({ method: dataMethod, value: data[dataMethod] })
+      // could instead rely on it automatically detecting column types
+      this.columns = columns
+      await this.$nextTick()
+      this.focusBuilder()
     },
     removeColumn(index) {
       const name = Object.keys(this.columns)[index]
