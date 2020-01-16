@@ -1,8 +1,15 @@
 <template>
   <section class="flex-grow overflow-hidden">
     <div id="chartRoot">
-      <div v-if="data.length === 0">Data is empty!</div>
-      <div v-else id="chartContainer" />
+      <div v-if="data.length === 0" key="empty">Data is empty!</div>
+      <div
+        v-else-if="error"
+        class="bg-red-200 text-red-800 px-4 py-3"
+        key="error"
+      >
+        We've hit an error! {{ error.message }}
+      </div>
+      <div v-else id="chartContainer" key="chart" />
     </div>
   </section>
 </template>
@@ -29,6 +36,7 @@ export default {
     resizeObserver: null,
     chartRoot: null,
     chartContainer: null,
+    error: null,
   }),
   computed: {
     ui() {
@@ -93,14 +101,19 @@ export default {
   methods: {
     loadVega() {
       if (this.data.length === 0) return
+      this.error = null
 
-      const vgSpec = compile(this.spec).spec
-      const runtime = vega.parse(vgSpec)
-      new vega.View(runtime)
-        .logLevel(vega.Warn)
-        .initialize(this.chartContainer)
-        .renderer("svg")
-        .run()
+      try {
+        const vgSpec = compile(this.spec).spec
+        const runtime = vega.parse(vgSpec)
+        new vega.View(runtime)
+          .logLevel(vega.Warn)
+          .initialize(this.chartContainer)
+          .renderer("svg")
+          .run()
+      } catch (err) {
+        this.error = err
+      }
     },
     configureResizeObserver() {
       this.resizeObserver = new ResizeObserver(
