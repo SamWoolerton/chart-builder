@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div v-if="dataMethod !== null">
+    <div v-if="dataMethod !== null || demo">
       <div v-if="loading">Loading...</div>
       <div v-else-if="previewData.length === 0">Source had no data</div>
       <div v-else>

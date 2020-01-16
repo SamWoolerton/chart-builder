@@ -86,10 +86,25 @@ export default {
       const { data, dataMethod, columns } = demos[demo]
       this.demo = demo
       await this.updateData({ method: dataMethod, value: data[dataMethod] })
-      // could instead rely on it automatically detecting column types
-      this.columns = columns
+
+      if (columns) {
+        // could instead rely on it automatically detecting column types
+        this.columns = columns
+
+        // remove every column that's not specified in the demo
+        const columnNames = Object.keys(columns)
+        Object.keys(this.loadedData[0])
+          .filter(column => !columnNames.includes(column))
+          .forEach(column => this.removeColumnByName(column))
+      }
+
       await this.$nextTick()
       this.focusBuilder()
+    },
+    removeColumnByName(name) {
+      this.$delete(this.columns, name)
+      // eslint-disable-next-line
+      this.loadedData = this.loadedData.map(({ [name]: n, ...cell }) => cell)
     },
     removeColumn(index) {
       const name = Object.keys(this.columns)[index]
