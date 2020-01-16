@@ -101,6 +101,10 @@
           @updateField="$emit('updateEncoding', $event)"
           @updateAggregation="$emit('updateAggregation', $event)"
         />
+
+        <div class="mt-6">
+          <button @click="$emit('clearLayer')">Clear layer</button>
+        </div>
       </div>
     </div>
   </section>

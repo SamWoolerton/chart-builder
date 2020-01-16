@@ -11,6 +11,7 @@
         @addLayer="addLayer"
         @selectLayer="activeLayerIndex = $event"
         @deleteLayer="deleteLayer"
+        @clearLayer="clearLayer(activeLayerIndex)"
         @updateEncoding="updateEncoding"
         @updateAggregation="updateAggregation"
         @selectPreset="selectPreset"
@@ -58,14 +59,14 @@ export default {
     },
   },
   data: () => ({
-    layersBase: [blankLayer],
+    layersBase: [{ ...blankLayer }],
     activeLayerIndex: 0,
   }),
   watch: {
     demo: {
       handler(next) {
         // when demo is null, reset to base
-        if (next === null) return (this.layersBase = [blankLayer])
+        if (next === null) return (this.layersBase = [{ ...blankLayer }])
 
         // when given a new demo, update layersBase to be that demo
         this.layersBase = demos[next].layersBase
@@ -147,6 +148,9 @@ export default {
       this.activeLayerIndex = min(index, newMaxIndex)
       this.layersBase.splice(index, 1)
     },
+    clearLayer(activeLayerIndex) {
+      this.$set(this.layersBase, activeLayerIndex, { ...blankLayer })
+    },
     updateEncoding({ field: type, value }) {
       if (type === "mark") {
         this.$set(this.layersBase[this.activeLayerIndex].main, "mark", value)
@@ -166,10 +170,9 @@ export default {
       )
     },
     selectPreset(layers) {
-      const { encoding } = blankLayer.main
       this.layersBase = layers.map(({ name, mark, config }) => ({
         name,
-        main: { mark, encoding },
+        main: { ...blankLayer.main, mark },
         config,
       }))
     },
