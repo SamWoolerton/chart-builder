@@ -152,7 +152,7 @@ export default {
     editLayerName: false,
     presetNames: Object.keys(presets),
     selectedPreset: null,
-    markOptions: ["bar", "line", "area", "point", "tick"],
+    markOptions: ["bar", "line", "area", "point", "tick", "boxplot"],
   }),
   computed: {
     activeLayer() {
