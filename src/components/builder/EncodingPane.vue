@@ -62,7 +62,11 @@
           >Edit</span
         >
       </h3>
-      <div>
+      <div v-if="!activeLayer.valid" class="mt-1 mb-4 text-red-700">
+        This layer isn't valid yet.
+      </div>
+
+      <div class="mt-3">
         <div>
           <div class="font-semibold text-lg">Mark</div>
           <Dropdown
