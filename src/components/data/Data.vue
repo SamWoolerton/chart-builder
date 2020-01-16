@@ -22,8 +22,8 @@
       <div v-if="loading">Loading...</div>
       <div v-else-if="previewData.length === 0">Source had no data</div>
       <div v-else>
-        <h3>Preview the data</h3>
-        <div>
+        <h3 class="my-4">Preview the data</h3>
+        <div class="overflow-x-auto">
           <Table :data="previewData">
             <template v-slot:afterHeader="{ data: { index } }">
               <span class="bg-gray-200 cursor-pointer" @click="$emit('removeColumn', index)">X</span>
@@ -31,13 +31,20 @@
             <template v-slot:beforeFirstRow>
               <tr>
                 <td v-for="({ type }, column) in columns" :key="column">
-                  <Dropdown :options="['nominal', 'quantitative']" :value="type" @input="$emit('updateColumnType', { column, type: $event.target.value })" />
+                  <Dropdown
+                    :options="['nominal', 'quantitative']"
+                    :value="type"
+                    @input="$emit('updateColumnType', { column, type: $event.target.value })"
+                  />
                 </td>
               </tr>
             </template>
           </Table>
         </div>
-        <button @click="$emit('done')">Go to builder</button>
+        <button
+          @click="$emit('done')"
+          class="mt-12 mx-auto block px-8 py-5 bg-blue-600"
+        >Go to builder</button>
       </div>
     </div>
   </div>
