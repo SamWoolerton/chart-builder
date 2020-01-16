@@ -3,6 +3,7 @@ export default {
     data: {
       url: "https://vega.github.io/editor/data/movies.json",
     },
+    dataMethod: "url",
     columns: {
       IMDB_Rating: { type: "quantitative", scale: { domain: [0, 10] } },
       US_Gross: { type: "quantitative" },

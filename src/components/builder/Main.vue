@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="builder-root" class="h-full">
     <div class="flex w-full pane-wrapper">
       <DataPane :columns="columns" />
       <EncodingPane
