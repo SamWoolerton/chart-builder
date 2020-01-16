@@ -1,3 +1,5 @@
+import { parse } from "papaparse"
+
 export const fetchData = async path => {
   const fetcher = path.endsWith("json") ? fetchJson : fetchCsv
   return fetcher(path)
@@ -13,17 +15,11 @@ export const fetchCsv = async path => {
   return parseCsv(text)
 }
 
-export const parseCsv = text => {
-  const [, ...rows] = text.split("\n")
+export const parseCsv = text =>
+  parse(text, { dynamicTyping: true, header: true, skipEmptyLines: "greedy" })
+    .data
 
-  return rows
-    .filter(row => row !== "")
-    .map(row => {
-      const [category, month, value] = row.split(",")
-      return { category, month, value }
-    })
-}
-
+// original from https://stackoverflow.com/a/56737666/7170445
 export const readFile = async file =>
   new Promise(resolve => {
     const reader = new FileReader()
