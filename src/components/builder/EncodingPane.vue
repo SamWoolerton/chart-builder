@@ -1,5 +1,19 @@
 <template>
   <section>
+    <div
+      v-if="!selectedPreset && !selectedDemo && !anyValidLayers"
+      class="mb-4"
+    >
+      <h3 class="text-xl">Quick start</h3>
+      <div>
+        <Dropdown
+          :options="presetNames"
+          :value="selectedPreset"
+          @input="selectPreset"
+        />
+      </div>
+    </div>
+
     <div>
       <h3 class="text-xl">Layers</h3>
       <button @click="$emit('addLayer')" class="my-2">Add layer</button>
@@ -27,6 +41,7 @@
         Delete current layer
       </button>
     </div>
+
     <div class="mt-4">
       <h3 class="text-xl">
         Customise
@@ -96,6 +111,7 @@ import Dropdown from "@/components/ui/Dropdown"
 import SetEncoding from "./SetEncoding"
 
 import { getEl } from "@/utility/functions"
+import presets from "@/config/presets"
 
 export default {
   components: {
@@ -119,9 +135,15 @@ export default {
       type: Object,
       required: true,
     },
+    selectedDemo: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: () => ({
     editLayerName: false,
+    presetNames: Object.keys(presets),
+    selectedPreset: null,
   }),
   computed: {
     activeLayer() {
@@ -132,8 +154,16 @@ export default {
         ({ valid }, index) => index !== this.activeLayerIndex && !valid,
       )
     },
+    anyValidLayers() {
+      return this.augmentedLayers.some(({ valid }) => valid)
+    },
   },
   methods: {
+    selectPreset(event) {
+      const { value } = event.target
+      this.selectedPreset = value
+      this.$emit("selectPreset", presets[value])
+    },
     selectLayer(event) {
       const { value: newLayer } = event.target
       this.$emit("selectLayer", +newLayer)

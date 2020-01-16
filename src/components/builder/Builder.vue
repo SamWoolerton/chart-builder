@@ -7,11 +7,13 @@
         :layersBase="layersBase"
         :augmentedLayers="augmentedLayers"
         :columns="columns"
+        :selectedDemo="!!demo"
         @addLayer="addLayer"
         @selectLayer="activeLayerIndex = $event"
         @deleteLayer="deleteLayer"
         @updateEncoding="updateEncoding"
         @updateAggregation="updateAggregation"
+        @selectPreset="selectPreset"
       />
       <ConfigPane />
       <Chart :data="data" :layers="layers" />
@@ -162,6 +164,14 @@ export default {
         "aggregate",
         value,
       )
+    },
+    selectPreset(layers) {
+      const { encoding } = blankLayer.main
+      this.layersBase = layers.map(({ name, mark, config }) => ({
+        name,
+        main: { mark, encoding },
+        config,
+      }))
     },
   },
 }
