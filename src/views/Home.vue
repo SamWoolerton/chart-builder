@@ -5,6 +5,7 @@
       :dataMethod="dataMethod"
       :columns="columns"
       :demo="demo"
+      @done="focusBuilder"
     />
     <Builder :data="data" :columns="columns" :demo="demo" />
   </div>
@@ -13,6 +14,7 @@
 <script>
 import Data from "../components/data/Main"
 import Builder from "../components/builder/Main"
+import { smoothScrollTo } from "../utility/scroll"
 import demos from "../demos"
 
 const { data, dataMethod, columns } = demos.movies
@@ -24,6 +26,11 @@ export default {
     data() {
       const { dataMethod } = this
       return { [dataMethod]: this.baseData[dataMethod] }
+    },
+  },
+  methods: {
+    focusBuilder() {
+      smoothScrollTo("builder-root")
     },
   },
 }

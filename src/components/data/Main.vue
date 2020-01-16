@@ -15,6 +15,7 @@
         </div>
       </div>
     </div>
+    <button @click="$emit('done')">Go to builder</button>
   </div>
 </template>
 
