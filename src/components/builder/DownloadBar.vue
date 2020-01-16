@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import copyToClipboard from "../../utility/clipboard"
-import downloadFile from "../../utility/download"
+import copyToClipboard from "@/utility/clipboard"
+import downloadFile from "@/utility/download"
 
 export default {
   props: {

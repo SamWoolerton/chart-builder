@@ -21,14 +21,13 @@
 </template>
 
 <script>
-import Data from "../components/data/Data"
-import Builder from "../components/builder/Builder"
+import Data from "@/components/data/Data"
+import Builder from "@/components/builder/Builder"
 
-import { mapObject, strIsValidDate } from "../utility/functions"
-import { smoothScrollTo } from "../utility/scroll"
-import { fetchData, readData } from "../utility/data"
-
-import demos from "../demos"
+import { mapObject, strIsValidDate } from "@/utility/functions"
+import { smoothScrollTo } from "@/utility/scroll"
+import { fetchData, readData } from "@/utility/data"
+import demos from "@/config/demos"
 
 const inferTypes = row =>
   mapObject(row, ([key, value]) => [

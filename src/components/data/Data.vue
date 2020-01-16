@@ -67,8 +67,9 @@
 </template>
 
 <script>
-import Table from "../ui/Table"
-import Dropdown from "../ui/Dropdown"
+import Table from "@/components/ui/Table"
+import Dropdown from "@/components/ui/Dropdown"
+import samples from "@/config/samples"
 
 export default {
   components: { Table, Dropdown },
@@ -98,24 +99,7 @@ export default {
     dataMethod: null,
     url: "",
     sample: null,
-    samples: [
-      {
-        name: "Cars",
-        url: "https://vega.github.io/vega-datasets/data/cars.json",
-      },
-      {
-        name: "Iowa electricity",
-        url: "https://vega.github.io/vega-datasets/data/iowa-electricity.csv",
-      },
-      {
-        name: "Monarchs",
-        url: "https://vega.github.io/vega-datasets/data/monarchs.json",
-      },
-      {
-        name: "US employment",
-        url: "https://vega.github.io/vega-datasets/data/us-employment.csv",
-      },
-    ],
+    samples,
   }),
   computed: {
     data() {

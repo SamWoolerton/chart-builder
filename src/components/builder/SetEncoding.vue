@@ -1,6 +1,6 @@
 <script>
 import { Drop } from "vue-drag-drop"
-import Dropdown from "../ui/Dropdown"
+import Dropdown from "@/components/ui/Dropdown"
 
 export default {
   components: { Drop, Dropdown },

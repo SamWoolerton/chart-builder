@@ -92,10 +92,10 @@
 </template>
 
 <script>
-import Dropdown from "../ui/Dropdown"
+import Dropdown from "@/components/ui/Dropdown"
 import SetEncoding from "./SetEncoding"
 
-import { getEl } from "../../utility/functions"
+import { getEl } from "@/utility/functions"
 
 export default {
   components: {

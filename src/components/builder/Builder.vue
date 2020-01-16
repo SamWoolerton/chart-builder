@@ -29,10 +29,9 @@ import Chart from "./Chart"
 import ConfigPane from "./ConfigPane"
 import DownloadBar from "./DownloadBar"
 
-import { mapObject, min } from "../../utility/functions"
-import { validLayer, blankLayer } from "../../utility/layers"
-
-import demos from "../../demos"
+import { mapObject, min } from "@/utility/functions"
+import { validLayer, blankLayer } from "@/utility/layers"
+import demos from "@/config/demos"
 
 export default {
   components: {
