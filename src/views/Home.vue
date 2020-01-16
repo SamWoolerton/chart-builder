@@ -9,8 +9,14 @@
       @done="focusBuilder"
       @updateData="updateData"
       @removeColumn="removeColumn"
+      @updateColumnType="updateColumnType"
     />
-    <Builder v-if="loadedData.length > 0" :data="data" :columns="columns" :demo="demo" />
+    <Builder
+      v-if="loadedData.length > 0"
+      :data="data"
+      :columns="columns"
+      :demo="demo"
+    />
   </div>
 </template>
 
@@ -81,6 +87,9 @@ export default {
       this.$delete(this.columns, name)
       // eslint-disable-next-line
       this.loadedData = this.loadedData.map(({ [name]: n, ...cell }) => cell)
+    },
+    updateColumnType({ column, type }) {
+      this.columns[column].type = type
     },
     focusBuilder() {
       smoothScrollTo("builder-root")
