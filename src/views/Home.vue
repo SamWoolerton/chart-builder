@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full">
+  <div>
     <Data
       :baseData="baseData"
       :columns="columns"

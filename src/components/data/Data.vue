@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white min-h-full">
+  <div class="bg-white min-h-screen">
     <h2>Import data</h2>
     <div>
       <h3 class="py-2 text-center">Select an import method</h3>
