@@ -1,7 +1,7 @@
 <template>
   <section>
     <div>
-      <h3>Layers</h3>
+      <h3 class="text-xl">Layers</h3>
       <button @click="$emit('addLayer')" class="my-2">Add layer</button>
       <div v-if="layersBase.length === 0">You don't have any layers</div>
       <select
@@ -14,18 +14,25 @@
           v-for="({ name }, index) in augmentedLayers"
           :key="index"
           :value="index"
-        >{{ name }} {{ activeLayerIndex === index ? "(active)" : "" }}</option>
+          >{{ name }} {{ activeLayerIndex === index ? "(active)" : "" }}</option
+        >
       </select>
-      <div v-if="inactiveLayersErrors" class="text-red-600 text-sm">Some layers need attention</div>
+      <div v-if="inactiveLayersErrors" class="text-red-600 text-sm">
+        Some layers need attention
+      </div>
       <button
         v-if="layersBase.length > 1"
         @click="$emit('deleteLayer', activeLayerIndex)"
-      >Delete current layer</button>
+      >
+        Delete current layer
+      </button>
     </div>
     <div class="mt-4">
-      <h3>
+      <h3 class="text-xl">
         Customise
-        <span v-if="!editLayerName" @dblclick="editName">{{ activeLayer.name }}</span>
+        <span v-if="!editLayerName" @dblclick="editName">{{
+          activeLayer.name
+        }}</span>
         <input
           v-else
           id="editLayerName"
@@ -37,7 +44,8 @@
           v-if="!editLayerName"
           @click="editName"
           class="cursor-pointer bg-gray-200 px-2 py-1"
-        >Edit</span>
+          >Edit</span
+        >
       </h3>
       <div>
         <div>
@@ -45,7 +53,12 @@
           <Dropdown
             :options="['bar', 'line', 'area']"
             :value="activeLayer.mark"
-            @input="$emit('updateEncoding', { field: 'mark', value: $event.target.value })"
+            @input="
+              $emit('updateEncoding', {
+                field: 'mark',
+                value: $event.target.value,
+              })
+            "
           />
         </div>
         <SetEncoding

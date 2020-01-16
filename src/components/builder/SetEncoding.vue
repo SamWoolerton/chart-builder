@@ -38,7 +38,7 @@ export default {
 
     return (
       <div class="mt-2">
-        <div class="font-semibold text-lg">{label}</div>
+        <div class="font-semibold">{label}</div>
         <Drop
           class={"drop-target " + (this.over ? "over" : "")}
           onDragover={() => (this.over = true)}
