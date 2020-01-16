@@ -2,7 +2,7 @@ export default {
   "Bar chart": [
     {
       name: "Bar",
-      mark: "bar",
+      mark: { type: "bar" },
       config: {
         encoding: {
           y: {

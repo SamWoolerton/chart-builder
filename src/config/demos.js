@@ -16,7 +16,7 @@ export default {
       {
         name: "Bar",
         main: {
-          mark: "bar",
+          mark: { type: "bar" },
           encoding: {
             x: "MPAA_Rating",
             y: "IMDB_Rating",
