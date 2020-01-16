@@ -19,7 +19,7 @@ import Builder from "../components/builder/Builder"
 
 import { mapObject } from "../utility/functions"
 import { smoothScrollTo } from "../utility/scroll"
-import { fetchData } from "../utility/data"
+import { fetchData, readData } from "../utility/data"
 
 import demos from "../demos"
 
@@ -60,11 +60,10 @@ export default {
       if (method === "url") {
         this.loadedData = await fetchData(value)
         this.baseData.url = value
+      } else if (method === "file") {
+        this.loadedData = await readData(value)
+        this.baseData.values = this.loadedData
       }
-      //  else if (method === "file") {
-      //   this.loadedData = await
-      //   this.baseData.values = this.loadedData
-      // }
 
       this.columns = inferTypes(this.loadedData[0] || {})
       this.loading = false

@@ -6,13 +6,12 @@
       <div class="flex flex-wrap justify-around px-4 py-8 bg-gray-100">
         <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
           <div class="mb-2">Upload CSV or JSON file</div>
-          <input type="file" @change="file = $event.files[0]" />
-          <button @click="updateData('file', file)">Upload file</button>
+          <input type="file" @change="selectFile" />
         </div>
         <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
           <div class="mb-2">Enter URL to CSV or JSON file</div>
           <input v-model="url" class="py-2 px-3 bg-gray-200" />
-          <button @click="updateData('url')">Get data</button>
+          <button @click="updateData('url', url)">Get data</button>
         </div>
         <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
           <div class="mb-2">Use sample dataset</div>
@@ -63,7 +62,6 @@ export default {
   data: () => ({
     dataMethod: null,
     url: "",
-    file: null,
   }),
   computed: {
     data() {
@@ -71,10 +69,12 @@ export default {
     },
   },
   methods: {
-    updateData(method) {
+    updateData(method, value) {
       this.dataMethod = method
-      const value = method === "url" ? this.url : null
       this.$emit("updateData", { method, value })
+    },
+    selectFile(e) {
+      this.updateData("file", e.target.files[0])
     },
   },
 }
