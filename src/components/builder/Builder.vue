@@ -16,6 +16,7 @@
       <ConfigPane />
       <Chart :data="data" :layers="layers" />
     </div>
+    <DownloadBar :layers="layers" />
   </div>
 </template>
 
@@ -26,6 +27,7 @@ import DataPane from "./DataPane"
 import EncodingPane from "./EncodingPane"
 import Chart from "./Chart"
 import ConfigPane from "./ConfigPane"
+import DownloadBar from "./DownloadBar"
 
 import { mapObject, min } from "../../utility/functions"
 import { validLayer, blankLayer } from "../../utility/layers"
@@ -38,6 +40,7 @@ export default {
     EncodingPane,
     Chart,
     ConfigPane,
+    DownloadBar,
   },
   props: {
     data: {
