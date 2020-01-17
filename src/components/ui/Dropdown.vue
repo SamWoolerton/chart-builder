@@ -1,11 +1,12 @@
 <template>
-  <select
-    :value="value"
-    @input="$emit('input', $event)"
-    class="bg-gray-200 px-3 py-2 cursor-pointer"
-  >
-    <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
-  </select>
+  <!-- dynamically pass through all attributes and event listeners -->
+  <VSelect
+    :items="options"
+    v-bind="$attrs"
+    v-on="$listeners"
+    class="w-64"
+    filled
+  />
 </template>
 
 <script>
@@ -14,10 +15,6 @@ export default {
     options: {
       type: Array,
       required: true,
-    },
-    value: {
-      type: String,
-      default: "",
     },
   },
 }

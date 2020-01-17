@@ -1,5 +1,11 @@
 $bg-input: #edf2f7;
 
+// select background
 #app .theme--light.v-text-field--filled > .v-input__control > .v-input__slot {
   background: $bg-input;
+}
+
+// whitespace below select dropdown
+.v-text-field__details {
+  display: none !important;
 }

@@ -16,7 +16,9 @@
 
     <div>
       <h3 class="text-xl">Layers</h3>
-      <button @click="$emit('addLayer')" class="my-2">Add layer</button>
+      <button @click="$emit('addLayer')" class="my-2 secondary">
+        Add layer
+      </button>
       <div v-if="layersBase.length === 0">You don't have any layers</div>
       <select
         v-else
@@ -107,7 +109,9 @@
         />
 
         <div class="mt-6">
-          <button @click="$emit('clearLayer')">Clear layer</button>
+          <button @click="$emit('clearLayer')" class="secondary">
+            Clear layer
+          </button>
         </div>
       </div>
     </div>
@@ -115,7 +119,6 @@
 </template>
 
 <script>
-import Dropdown from "@/components/ui/Dropdown"
 import SetEncoding from "./SetEncoding"
 
 import { getEl } from "@/utility/functions"
@@ -123,7 +126,6 @@ import presets from "@/config/presets"
 
 export default {
   components: {
-    Dropdown,
     SetEncoding,
   },
   props: {
@@ -168,10 +170,9 @@ export default {
     },
   },
   methods: {
-    selectPreset(event) {
-      const { value } = event.target
-      this.selectedPreset = value
-      this.$emit("selectPreset", presets[value])
+    selectPreset(preset) {
+      this.selectedPreset = preset
+      this.$emit("selectPreset", presets[preset])
     },
     selectLayer(event) {
       const { value: newLayer } = event.target

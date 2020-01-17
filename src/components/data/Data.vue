@@ -15,12 +15,10 @@
         </div>
         <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
           <div class="mb-2">Use sample dataset</div>
-          <VSelect
-            :items="sampleNames"
+          <Dropdown
+            :options="sampleNames"
             :value="sample"
             @input="selectSample"
-            class="w-64"
-            filled
           />
         </div>
       </div>
@@ -42,15 +40,17 @@
             <template v-slot:beforeFirstRow>
               <tr>
                 <td v-for="({ type }, column) in columns" :key="column">
-                  <Dropdown
-                    :options="['nominal', 'quantitative', 'temporal']"
+                  <VSelect
+                    :items="['nominal', 'quantitative', 'temporal']"
                     :value="type"
                     @input="
                       $emit('updateColumnType', {
                         column,
-                        type: $event.target.value,
+                        type: $event,
                       })
                     "
+                    class="w-48"
+                    filled
                   />
                 </td>
               </tr>
@@ -70,11 +70,10 @@
 
 <script>
 import Table from "@/components/ui/Table"
-import Dropdown from "@/components/ui/Dropdown"
 import samples from "@/config/samples"
 
 export default {
-  components: { Table, Dropdown },
+  components: { Table },
   props: {
     baseData: {
       type: Object,
