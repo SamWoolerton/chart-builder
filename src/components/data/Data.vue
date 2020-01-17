@@ -4,17 +4,34 @@
     <div>
       <h3 class="py-2 text-center">Select an import method</h3>
       <div class="flex flex-wrap justify-around px-4 py-8 bg-gray-100">
-        <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
-          <div class="mb-2">Upload CSV or JSON file</div>
-          <input type="file" @change="selectFile" />
+        <div class="bg-white px-10 py-6 m-1 shadow-xl">
+          <div class="mb-2 font-bold">Upload CSV or JSON file</div>
+          <VFileInput
+            @change="updateData('file', $event)"
+            accept=".csv,.json,application/json,text/json,application/csv,text/csv"
+            class="w-full md:w-64"
+            label="File"
+            filled
+          />
         </div>
-        <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
-          <div class="mb-2">Enter URL to CSV or JSON file</div>
-          <input v-model="url" class="py-2 px-3 bg-gray-200" />
-          <button @click="updateData('url', url)">Get data</button>
+        <div class="bg-white px-10 py-6 m-1 shadow-xl">
+          <div class="mb-2 font-bold">Enter URL to CSV or JSON file</div>
+          <VTextField
+            v-model="url"
+            @enter="updateData('url', url)"
+            label="URL"
+            class="w-full sm:w-64"
+            filled
+          />
+          <button
+            @click="updateData('url', url)"
+            class="primary mt-2 w-full py-3"
+          >
+            Get data
+          </button>
         </div>
-        <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
-          <div class="mb-2">Use sample dataset</div>
+        <div class="bg-white px-10 py-6 m-1 shadow-xl">
+          <div class="mb-2 font-bold">Use sample dataset</div>
           <Dropdown
             :options="sampleNames"
             :value="sample"
@@ -49,7 +66,7 @@
                         type: $event,
                       })
                     "
-                    class="w-48"
+                    class="w-full"
                     filled
                   />
                 </td>
@@ -114,9 +131,6 @@ export default {
     updateData(method, value) {
       this.dataMethod = method
       this.$emit("updateData", { method, value })
-    },
-    selectFile(e) {
-      this.updateData("file", e.target.files[0])
     },
     selectSample(sample) {
       this.sample = sample

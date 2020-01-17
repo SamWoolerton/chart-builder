@@ -9,3 +9,9 @@ $bg-input: #edf2f7;
 .v-text-field__details {
   display: none !important;
 }
+
+.v-application,
+.v-text-field input,
+.v-select__selections {
+  line-height: inherit !important;
+}
