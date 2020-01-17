@@ -9,6 +9,8 @@
           :transfer-data="{ field: col.field }"
           class="bg-gray-200 px-3 py-1 mt-1 text-sm rounded-full"
         >
+        <div class="truncate">
+
           <span class="inline-block w-8">
             <v-icon v-if="col.type === 'temporal'" small class="ml-1"
               >mdi-calendar</v-icon
@@ -16,6 +18,7 @@
             <span v-else class="text-gray-700 text-xs">{{ col.prefix }}</span>
           </span>
           <span>{{ col.field }}</span>
+        </div>
         </drag>
       </div>
     </div>
