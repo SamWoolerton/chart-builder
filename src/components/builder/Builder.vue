@@ -73,6 +73,29 @@ export default {
       },
       immediate: true,
     },
+    // need to remove invalid columns
+    columns: {
+      handler(next, prev) {
+        const newColumns = Object.keys(next)
+        const removed = Object.keys(prev).filter(
+          col => !newColumns.includes(col),
+        )
+        const encodings = this.layersBase.map(layer =>
+          Object.entries(layer.main.encoding),
+        )
+
+        removed.forEach(col =>
+          encodings.forEach((layer, layerIndex) =>
+            layer.forEach(([encoding, field]) => {
+              if (field === col) {
+                this.layersBase[layerIndex].main.encoding[encoding] = null
+              }
+            }),
+          ),
+        )
+      },
+      deep: true,
+    },
   },
   computed: {
     mergedLayers() {
