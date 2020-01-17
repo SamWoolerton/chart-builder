@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white px-8 py-8">
+  <div class="bg-white px-8 py-8 mt-1">
     <h3 class="text-lg text-center">Export chart config</h3>
     <div class="flex flex-wrap justify-center mt-2 p-4">
       <button @click="copyBasic" class="m-2 secondary">

@@ -66,8 +66,28 @@
       </VContainer>
 
       <div v-if="dataMethod !== null || demo" class="pb-16 mt-6 bg-gray-100">
-        <div v-if="loading">Loading...</div>
-        <div v-else-if="previewData.length === 0">Source had no data</div>
+        <VContainer v-if="loading" class="bg-white py-8">
+          <div>
+            <div class="mx-auto flex justify-center">
+              <v-progress-circular indeterminate color="primary" />
+              <div class="text-center font-bold text-lg self-center ml-6">
+                Loading...
+              </div>
+            </div>
+          </div>
+        </VContainer>
+        <VContainer v-else-if="previewData.length === 0" class="bg-white py-8">
+          <div>
+            <div class="mx-auto flex justify-center">
+              <div class="rounded-full error p-4">
+                <v-icon color="white">mdi-alert-circle-outline</v-icon>
+              </div>
+              <div class="text-center font-bold text-lg self-center ml-6">
+                Source had no data
+              </div>
+            </div>
+          </div>
+        </VContainer>
         <div v-else>
           <VContainer class="bg-white py-6 px-4">
             <h3 class="mt-2 mb-4 text-center">Preview the data</h3>

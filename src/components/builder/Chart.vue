@@ -1,13 +1,57 @@
 <template>
   <section class="flex-grow overflow-hidden">
     <div id="chartRoot">
-      <div v-if="data.length === 0" key="empty">Data is empty!</div>
-      <div
-        v-else-if="error"
-        class="bg-red-200 text-red-800 px-4 py-3"
-        key="error"
-      >
-        We've hit an error! {{ error.message }}
+      <div v-if="layers.length === 0" key="no-layers">
+        <div class="py-2">
+          <div class="py-12 relative">
+            <div class="absolute top-0 bottom-0 left-0 right-0">
+              <div class="mt-4 px-16">
+                <div class="w-4/5 bg-gray-200 opacity-75 h-16 mt-4" />
+                <div class="w-1/2 bg-gray-200 opacity-75 h-16 mt-4" />
+                <div class="w-2/3 bg-gray-200 opacity-75 h-16 mt-4" />
+                <div class="w-4/5 bg-gray-200 opacity-75 h-16 mt-4" />
+                <div class="w-2/5 bg-gray-200 opacity-75 h-16 mt-4" />
+              </div>
+            </div>
+            <div class="relative my-10">
+              <div class="mx-auto flex justify-center">
+                <div class="rounded-full info mt-2 mb-6 mx-auto p-4">
+                  <v-icon color="white">mdi-alert-circle-outline</v-icon>
+                </div>
+              </div>
+              <div class="text-center text-lg font-bold">
+                Customise your chart to get started
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="data.length === 0" key="no-data">
+        <div class="py-10">
+          <div class="m-auto flex justify-center">
+            <div class="rounded-full info mt-2 mb-6 mx-auto p-4">
+              <v-icon color="white">mdi-alert-circle-outline</v-icon>
+            </div>
+          </div>
+          <div class="text-center text-lg font-bold">
+            No data provided.
+          </div>
+        </div>
+      </div>
+      <div v-else-if="error" key="error">
+        <div class="py-10">
+          <div class="m-auto flex justify-center">
+            <div class="rounded-full error mt-2 mb-6 mx-auto p-4">
+              <v-icon color="white">mdi-alert-circle-outline</v-icon>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-lg font-bold">
+              We've hit an error!
+            </div>
+            <div class="mt-1">{{ error && error.message }}</div>
+          </div>
+        </div>
       </div>
       <div v-else id="chartContainer" key="chart" />
     </div>
