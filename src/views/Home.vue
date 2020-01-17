@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative pb-24">
     <Data
       :baseData="baseData"
       :columns="columns"
@@ -17,6 +17,7 @@
       :columns="columns"
       :demo="demo"
     />
+
     <div
       class="absolute bottom-0 inset-x-0 mb-3 text-center text-sm color-gray-700"
     >

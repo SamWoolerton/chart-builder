@@ -4,7 +4,7 @@
     :items="options"
     v-bind="$attrs"
     v-on="$listeners"
-    class="w-full sm:w-64"
+    class="w-full"
     filled
   />
 </template>

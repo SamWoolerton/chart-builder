@@ -15,33 +15,36 @@
     </div>
 
     <div>
-      <h3 class="text-xl">Layers</h3>
-      <button @click="$emit('addLayer')" class="my-2 secondary">
-        Add layer
-      </button>
+      <h3 class="text-xl mb-2">Layers</h3>
       <div v-if="layersBase.length === 0">You don't have any layers</div>
-      <select
+      <Dropdown
         v-else
+        :options="layerOptions"
         :value="activeLayerIndex"
         @input="selectLayer"
-        class="bg-gray-200 px-3 py-2 cursor-pointer"
-      >
-        <option
-          v-for="({ name }, index) in augmentedLayers"
-          :key="index"
-          :value="index"
-          >{{ name }} {{ activeLayerIndex === index ? "(active)" : "" }}</option
-        >
-      </select>
+        class="w-full sm:w-full"
+      />
       <div v-if="inactiveLayersErrors" class="text-red-600 text-sm">
         Some layers need attention
       </div>
-      <button
-        v-if="layersBase.length > 1"
-        @click="$emit('deleteLayer', activeLayerIndex)"
-      >
-        Delete current layer
-      </button>
+      <div class="flex flex-wrap my-2">
+        <button @click="$emit('addLayer')" class="primary mr-2 mt-2">
+          Add layer
+        </button>
+        <button
+          @click="$emit('clearLayer')"
+          class="warning text-orange-100 mr-2 mt-2"
+        >
+          Clear layer
+        </button>
+        <button
+          v-if="layersBase.length > 1"
+          @click="$emit('deleteLayer', activeLayerIndex)"
+          class="warning text-orange-100 mt-2"
+        >
+          Delete current layer
+        </button>
+      </div>
     </div>
 
     <div class="mt-4">
@@ -50,18 +53,17 @@
         <span v-if="!editLayerName" @dblclick="editName">{{
           activeLayer.name
         }}</span>
-        <input
-          v-else
-          id="editLayerName"
-          v-model="layersBase[activeLayerIndex].name"
-          @blur="editLayerName = false"
-          @keydown.enter="editLayerName = false"
-        />
-        <span
-          v-if="!editLayerName"
-          @click="editName"
-          class="cursor-pointer bg-gray-200 px-2 py-1"
-          >Edit</span
+        <div v-else class="mt-1">
+          <VTextField
+            id="editLayerName"
+            v-model="layersBase[activeLayerIndex].name"
+            @blur="editLayerName = false"
+            @keydown.enter="editLayerName = false"
+            filled
+          />
+        </div>
+        <v-icon v-if="!editLayerName" @click="editName" class="ml-2" small
+          >mdi-pencil</v-icon
         >
       </h3>
       <div v-if="!activeLayer.valid" class="mt-1 mb-4 text-red-700">
@@ -107,12 +109,6 @@
           @updateField="$emit('updateEncoding', $event)"
           @updateAggregation="$emit('updateAggregation', $event)"
         />
-
-        <div class="mt-6">
-          <button @click="$emit('clearLayer')" class="secondary">
-            Clear layer
-          </button>
-        </div>
       </div>
     </div>
   </section>
@@ -168,14 +164,19 @@ export default {
     anyValidLayers() {
       return this.augmentedLayers.some(({ valid }) => valid)
     },
+    layerOptions() {
+      return this.augmentedLayers.map(({ name }, index) => ({
+        text: name + (index === this.activeLayerIndex ? " (active)" : ""),
+        value: index,
+      }))
+    },
   },
   methods: {
     selectPreset(preset) {
       this.selectedPreset = preset
       this.$emit("selectPreset", presets[preset])
     },
-    selectLayer(event) {
-      const { value: newLayer } = event.target
+    selectLayer(newLayer) {
       this.$emit("selectLayer", +newLayer)
       this.editLayerName = false
     },

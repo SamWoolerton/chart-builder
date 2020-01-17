@@ -42,7 +42,7 @@
         </div>
       </VContainer>
     </div>
-    <div v-if="dataMethod !== null || demo">
+    <div v-if="dataMethod !== null || demo" class="pb-16">
       <div v-if="loading">Loading...</div>
       <div v-else-if="previewData.length === 0">Source had no data</div>
       <div v-else>
@@ -79,6 +79,7 @@
             </Table>
           </div>
         </VContainer>
+
         <button
           @click="$emit('done')"
           class="mt-12 mx-auto block px-8 py-5 bg-blue-600 text-white"

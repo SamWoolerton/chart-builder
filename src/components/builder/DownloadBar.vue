@@ -1,12 +1,17 @@
 <template>
-  <div class="bg-white px-8 py-6">
+  <div class="bg-white px-8 py-8">
     <h3 class="text-lg text-center">Export chart config</h3>
-    <div class="flex flex-wrap mt-2 p-4">
-      <button @click="copyBasic" class="m-2 ml-auto secondary">
+    <div class="flex flex-wrap justify-center mt-2 p-4">
+      <button @click="copyBasic" class="m-2 secondary rounded">
+        <v-icon color="white">mdi-content-copy</v-icon>
         Copy basic config
       </button>
-      <button @click="copyFull" class="m-2 secondary">Copy full config</button>
-      <button @click="download" class="m-2 mr-auto secondary">
+      <button @click="copyFull" class="m-2 secondary rounded">
+        <v-icon color="white">mdi-content-copy</v-icon>
+        Copy full config
+      </button>
+      <button @click="download" class="m-2 secondary rounded">
+        <v-icon color="white">mdi-download</v-icon>
         Download full config
       </button>
     </div>

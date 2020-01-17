@@ -46,22 +46,26 @@ export default {
             this.$emit("updateField", { field, value: data.field })
           }}
         >
-          <Dropdown
-            options={options}
-            value={selectedValue}
-            onInput={handler("updateField")}
-          />
+          <div class="mt-1">
+            <Dropdown
+              options={options}
+              value={selectedValue}
+              onInput={handler("updateField")}
+            />
+          </div>
         </Drop>
         {isQuant && (
           <div>
             <div class="text-gray-700 font-semibold text-sm mt-2">
               Aggregation (optional)
             </div>
-            <Dropdown
-              options={aggregationOptions}
-              value={encoding[field].aggregate}
-              onInput={handler("updateAggregation")}
-            />
+            <div class="mt-1">
+              <Dropdown
+                options={aggregationOptions}
+                value={encoding[field].aggregate}
+                onInput={handler("updateAggregation")}
+              />
+            </div>
           </div>
         )}
         {showScale && (
