@@ -15,10 +15,12 @@
         </div>
         <div class="bg-white px-10 py-6 m-1 shadow-xl font-bold">
           <div class="mb-2">Use sample dataset</div>
-          <Dropdown
-            :options="sampleNames"
+          <VSelect
+            :items="sampleNames"
             :value="sample"
             @input="selectSample"
+            class="w-64"
+            filled
           />
         </div>
       </div>
@@ -57,7 +59,7 @@
         </div>
         <button
           @click="$emit('done')"
-          class="mt-12 mx-auto block px-8 py-5 bg-blue-600"
+          class="mt-12 mx-auto block px-8 py-5 bg-blue-600 text-white"
         >
           Go to builder
         </button>
@@ -117,10 +119,9 @@ export default {
     selectFile(e) {
       this.updateData("file", e.target.files[0])
     },
-    selectSample(e) {
-      const { value } = e.target
-      this.sample = value
-      const { url } = this.samples.find(({ name }) => name === value)
+    selectSample(sample) {
+      this.sample = sample
+      const { url } = this.samples.find(({ name }) => name === sample)
       this.updateData("url", url)
     },
   },

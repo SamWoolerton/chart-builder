@@ -1,0 +1,5 @@
+$bg-input: #edf2f7;
+
+#app .theme--light.v-text-field--filled > .v-input__control > .v-input__slot {
+  background: $bg-input;
+}

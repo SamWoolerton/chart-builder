@@ -71,7 +71,7 @@
           <div class="font-semibold text-lg">Mark</div>
           <Dropdown
             :options="markOptions"
-            :value="activeLayer.mark.type"
+            :value="activeLayer.mark && activeLayer.mark.type"
             @input="
               $emit('updateEncoding', {
                 field: 'mark',

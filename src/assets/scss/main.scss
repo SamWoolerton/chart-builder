@@ -22,7 +22,14 @@ section {
 }
 
 button {
-  @apply cursor-pointer bg-gray-700 text-gray-100 py-2 px-3;
+  @apply cursor-pointer py-2 px-3;
+
+  &.primary {
+    @apply bg-blue-600 text-blue-100;
+  }
+  &.secondary {
+    @apply bg-gray-700 text-gray-100;
+  }
 }
 
 [draggable] {
