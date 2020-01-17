@@ -2,7 +2,7 @@
   <div class="min-h-screen">
     <VContainer class="mt-6 mb-4">
       <h2 class="text-center">Chart builder</h2>
-      <p class="text-lg text-center mt-2">
+      <p class="text-lg text-center mt-3">
         Import your data or use samples | Easily build charts | Export for use
         in Power BI (or anywhere you can use Vega-Lite)
       </p>
@@ -12,7 +12,12 @@
         <h3 class="mt-2 mb-4 text-center">Select an import method</h3>
         <div class="px-2 py-6 bg-gray-100">
           <div class="flex flex-wrap justify-around">
-            <div class="bg-white px-10 py-6 m-1 shadow-xl">
+            <div class="bg-white px-10 py-6 m-2 shadow-xl">
+              <div class="flex justify-center">
+                <div class="rounded-full primary mt-2 mb-6 mx-auto p-4">
+                  <v-icon color="white">mdi-upload</v-icon>
+                </div>
+              </div>
               <div class="mb-2 font-bold">Upload CSV or JSON file</div>
               <VFileInput
                 @change="updateData('file', $event)"
@@ -22,7 +27,12 @@
                 filled
               />
             </div>
-            <div class="bg-white px-10 py-6 m-1 shadow-xl">
+            <div class="bg-white px-10 py-6 m-2 shadow-xl">
+              <div class="flex justify-center">
+                <div class="rounded-full primary mt-2 mb-6 mx-auto p-4">
+                  <v-icon color="white">mdi-web</v-icon>
+                </div>
+              </div>
               <div class="mb-2 font-bold">Enter URL to CSV or JSON file</div>
               <VTextField
                 v-model="url"
@@ -38,7 +48,12 @@
                 Get data
               </button>
             </div>
-            <div class="bg-white px-10 py-6 m-1 shadow-xl">
+            <div class="bg-white px-10 py-6 m-2 shadow-xl">
+              <div class="flex justify-center">
+                <div class="rounded-full primary mt-2 mb-6 mx-auto p-4">
+                  <v-icon color="white">mdi-magnify</v-icon>
+                </div>
+              </div>
               <div class="mb-2 font-bold">Use sample dataset</div>
               <Dropdown
                 :options="sampleNames"
@@ -92,7 +107,7 @@
             @click="$emit('done')"
             class="mt-12 mx-auto block px-8 py-5 bg-blue-600 text-white"
           >
-            Go to builder
+            Start building
           </button>
         </div>
       </div>

@@ -22,7 +22,7 @@ section {
 }
 
 button {
-  @apply cursor-pointer py-2 px-3;
+  @apply cursor-pointer py-2 px-3 rounded;
 
   &.primary {
     @apply bg-blue-600 text-blue-100;
