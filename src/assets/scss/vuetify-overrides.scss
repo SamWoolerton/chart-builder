@@ -1,8 +1,12 @@
 $bg-input: #edf2f7;
 
-// select background
-#app .theme--light.v-text-field--filled > .v-input__control > .v-input__slot {
-  background: $bg-input;
+// input background
+#app .theme--light.v-text-field--filled > .v-input__control > .v-input__slot,
+// hovered table row
+.theme--light.v-data-table tbody tr:hover {
+  &:not(.no-highlight-bg) {
+    background: $bg-input !important;
+  }
 }
 
 // whitespace below select dropdown
@@ -14,4 +18,19 @@ $bg-input: #edf2f7;
 .v-text-field input,
 .v-select__selections {
   line-height: inherit !important;
+}
+
+.theme--light.v-application {
+  background: inherit !important;
+}
+
+.v-data-table th {
+  font-size: 0.875rem !important;
+}
+
+.no-highlight-bg {
+  &,
+  &:hover {
+    background: inherit !important;
+  }
 }

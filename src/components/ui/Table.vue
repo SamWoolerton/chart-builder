@@ -1,18 +1,19 @@
 <template>
-  <table>
-    <thead>
-      <th v-for="(col, index) in columns" :key="col">
-        {{ col }}
-        <slot name="afterHeader" :data="{ index }" />
-      </th>
-    </thead>
-    <tbody>
-      <slot name="beforeFirstRow" />
-      <tr v-for="(row, index) in data" :key="index">
-        <td v-for="(value, key) in row" :key="key">{{ value }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <v-simple-table>
+    <template v-slot:default>
+      <thead>
+        <th v-for="(col, index) in columns" :key="col">
+          <slot name="header" :data="{ col, index }">{{ col }}</slot>
+        </th>
+      </thead>
+      <tbody>
+        <slot name="beforeFirstRow" />
+        <tr v-for="(row, index) in data" :key="index">
+          <td v-for="(value, key) in row" :key="key">{{ value }}</td>
+        </tr>
+      </tbody>
+    </template>
+  </v-simple-table>
 </template>
 
 <script>
