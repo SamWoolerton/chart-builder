@@ -76,14 +76,15 @@ export default {
   methods: {
     async updateData({ method, value }) {
       this.loading = true
-      this.dataMethod = method
 
       if (method === "url") {
         this.loadedData = await fetchData(value)
-        this.baseData.url = value
+        this.$set(this.baseData, "url", value)
+        this.dataMethod = "url"
       } else if (method === "file") {
         this.loadedData = await readData(value)
-        this.baseData.values = this.loadedData
+        this.$set(this.baseData, "values", this.loadedData)
+        this.dataMethod = "values"
       }
 
       this.columns = inferTypes(this.loadedData[0] || {})

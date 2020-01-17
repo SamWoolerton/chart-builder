@@ -34,3 +34,7 @@ $bg-input: #edf2f7;
     background: inherit !important;
   }
 }
+
+.v-select .v-input__slot {
+  margin-bottom: 0;
+}

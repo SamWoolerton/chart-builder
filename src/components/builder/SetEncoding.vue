@@ -32,8 +32,7 @@ export default {
       columns[validField].scale &&
       [undefined, "average", "median"].includes(encoding[field].aggregate)
 
-    const handler = name => e =>
-      this.$emit(name, { field, value: e.target.value })
+    const handler = name => value => this.$emit(name, { field, value })
 
     return (
       <div class="mt-2">

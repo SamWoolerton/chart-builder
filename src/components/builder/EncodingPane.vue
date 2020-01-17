@@ -77,7 +77,7 @@
             @input="
               $emit('updateEncoding', {
                 field: 'mark',
-                value: { type: $event.target.value },
+                value: { type: $event },
               })
             "
           />
